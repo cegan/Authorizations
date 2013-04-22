@@ -1,7 +1,0 @@
-C:\MyProjects\TransactWeb\TransferAuthorizationDataAccess\bin\Debug\TransferAuthorizationDataAccess.dll.config
-C:\MyProjects\TransactWeb\TransferAuthorizationDataAccess\bin\Debug\TransferAuthorizationDataAccess.dll
-C:\MyProjects\TransactWeb\TransferAuthorizationDataAccess\bin\Debug\TransferAuthorizationDataAccess.pdb
-C:\MyProjects\TransactWeb\TransferAuthorizationDataAccess\bin\Debug\EntityFramework.dll
-C:\MyProjects\TransactWeb\TransferAuthorizationDataAccess\bin\Debug\EntityFramework.xml
-C:\MyProjects\TransactWeb\TransferAuthorizationDataAccess\obj\Debug\TransferAuthorizationDataAccess.dll
-C:\MyProjects\TransactWeb\TransferAuthorizationDataAccess\obj\Debug\TransferAuthorizationDataAccess.pdb

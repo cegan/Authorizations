@@ -1,7 +1,0 @@
-<Modules>
-  <Module PersistentId="8C752076-43D3-4FE0-9AB7-28CE9EDD8663" ModuleId="TransactWeb" />
-  <Module PersistentId="ED45CCB9-3AEF-4934-B631-0E9C97D9EB7B" ModuleId="ApprovalsService" />
-  <Module PersistentId="A91E03EF-6532-4896-89C4-9FCEC1D8D4DB" ModuleId="MoonAPNS" />
-  <Module PersistentId="45D953C1-39AC-4F5A-8A32-693328DA852F" ModuleId="MvcApplication1" />
-  <Module PersistentId="C766B7E2-CDF0-4347-9A9C-887547C5AC02" ModuleId="AuthorizationHubs" />
-</Modules>

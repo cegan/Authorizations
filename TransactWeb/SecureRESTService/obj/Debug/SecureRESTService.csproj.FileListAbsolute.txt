@@ -1,5 +1,0 @@
-C:\MyPlayground\SecureMVC4\SecureRESTService\bin\SecureRESTService.dll
-C:\MyPlayground\SecureMVC4\SecureRESTService\bin\SecureRESTService.pdb
-C:\MyPlayground\SecureMVC4\SecureRESTService\obj\Debug\ResolveAssemblyReference.cache
-C:\MyPlayground\SecureMVC4\SecureRESTService\obj\Debug\SecureRESTService.dll
-C:\MyPlayground\SecureMVC4\SecureRESTService\obj\Debug\SecureRESTService.pdb

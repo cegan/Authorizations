@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="8f3af0c223c949a6a8e84b43da95ee88" Name="Diagram1">
+        <EntityTypeShape EntityType="AuthorizationsModel.AchAuthorization" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AuthorizationsModel.CheckAuthorization" Width="1.5" PointX="2.0180344404736696" PointY="22.55042542077155" />
+        <EntityTypeShape EntityType="AuthorizationsModel.WireAuthorization" Width="1.5" PointX="8.0189378559677564" PointY="10.7867224564714" />
+        <EntityTypeShape EntityType="AuthorizationsModel.Approver" Width="1.5" PointX="3.125" PointY="5.125" />
+        <EntityTypeShape EntityType="AuthorizationsModel.ContactInformation" Width="1.5" PointX="6.125" PointY="6.625" />
+        <EntityTypeShape EntityType="AuthorizationsModel.Employee" Width="1.5" PointX="9.125" PointY="8.125" />
+        <AssociationConnector Association="AuthorizationsModel.FK_AchAuthorizations_AchAuthorizations" />
+        <AssociationConnector Association="AuthorizationsModel.FK_Authorizations_AchAuthorizations" />
+        <AssociationConnector Association="AuthorizationsModel.FK_Authorizations_CheckAuthorizations" />
+        <AssociationConnector Association="AuthorizationsModel.FK_Authorizations_WireAuthorizations" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

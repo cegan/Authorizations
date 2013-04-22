@@ -1,0 +1,456 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="AuthorizationsModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="AuthorizationsModelStoreContainer">
+          <EntitySet Name="AchAuthorizations" EntityType="AuthorizationsModel.Store.AchAuthorizations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Approvers" EntityType="AuthorizationsModel.Store.Approvers" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CheckAuthorizations" EntityType="AuthorizationsModel.Store.CheckAuthorizations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ContactInformation" EntityType="AuthorizationsModel.Store.ContactInformation" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Employee" EntityType="AuthorizationsModel.Store.Employee" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="WireAuthorizations" EntityType="AuthorizationsModel.Store.WireAuthorizations" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_AchAuthorizations_AchAuthorizations" Association="AuthorizationsModel.Store.FK_AchAuthorizations_AchAuthorizations">
+            <End Role="AchAuthorizations" EntitySet="AchAuthorizations" />
+            <End Role="AchAuthorizations1" EntitySet="AchAuthorizations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Authorizations_AchAuthorizations" Association="AuthorizationsModel.Store.FK_Authorizations_AchAuthorizations">
+            <End Role="ContactInformation" EntitySet="ContactInformation" />
+            <End Role="AchAuthorizations" EntitySet="AchAuthorizations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Authorizations_CheckAuthorizations" Association="AuthorizationsModel.Store.FK_Authorizations_CheckAuthorizations">
+            <End Role="ContactInformation" EntitySet="ContactInformation" />
+            <End Role="CheckAuthorizations" EntitySet="CheckAuthorizations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Authorizations_WireAuthorizations" Association="AuthorizationsModel.Store.FK_Authorizations_WireAuthorizations">
+            <End Role="ContactInformation" EntitySet="ContactInformation" />
+            <End Role="WireAuthorizations" EntitySet="WireAuthorizations" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AchAuthorizations">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="AccountNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="200" />
+          <Property Name="Amount" Type="money" />
+          <Property Name="OriginatingSystem" Type="nvarchar" MaxLength="50" />
+          <Property Name="IssuedOn" Type="datetime" />
+          <Property Name="IsApproved" Type="bit" />
+          <Property Name="ApproverId" Type="varchar" MaxLength="50" />
+          <Property Name="ApprovedOn" Type="datetime" />
+          <Property Name="ErrorDetails" Type="nvarchar" MaxLength="250" />
+          <Property Name="ContactInformation_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="Approvers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Approver" Type="nvarchar" MaxLength="50" />
+          <Property Name="ApproverDeviceToken" Type="nvarchar" MaxLength="300" />
+        </EntityType>
+        <EntityType Name="CheckAuthorizations">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="AccountNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="200" />
+          <Property Name="Amount" Type="money" />
+          <Property Name="OriginatingSystem" Type="nvarchar" MaxLength="50" />
+          <Property Name="IssuedOn" Type="datetime" />
+          <Property Name="IsApproved" Type="bit" />
+          <Property Name="ApproverId" Type="varchar" MaxLength="50" />
+          <Property Name="ApprovedOn" Type="datetime" />
+          <Property Name="ContactInformation_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="ContactInformation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Address" Type="varchar" MaxLength="100" />
+          <Property Name="City" Type="varchar" MaxLength="100" />
+          <Property Name="State" Type="varchar" MaxLength="2" />
+          <Property Name="ZipCode" Type="varchar" MaxLength="5" />
+          <Property Name="HomePhone" Type="varchar" MaxLength="10" />
+          <Property Name="MobilPhone" Type="varchar" MaxLength="10" />
+          <Property Name="EmailAddress" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="NetworkId" Type="nvarchar" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+          <Property Name="NameFirst" Type="nvarchar" MaxLength="50" />
+          <Property Name="NameLast" Type="nvarchar" MaxLength="50" />
+          <Property Name="DeviceToken" Type="nvarchar" MaxLength="150" />
+          <Property Name="Title" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="WireAuthorizations">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="AccountNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="200" />
+          <Property Name="Amount" Type="money" />
+          <Property Name="OriginatingSystem" Type="nvarchar" MaxLength="50" />
+          <Property Name="IssuedOn" Type="datetime" />
+          <Property Name="IsApproved" Type="bit" />
+          <Property Name="ApproverId" Type="varchar" MaxLength="50" />
+          <Property Name="ApprovedOn" Type="datetime" />
+          <Property Name="ContactInformation_ID" Type="int" />
+        </EntityType>
+        <Association Name="FK_AchAuthorizations_AchAuthorizations">
+          <End Role="AchAuthorizations" Type="AuthorizationsModel.Store.AchAuthorizations" Multiplicity="1" />
+          <End Role="AchAuthorizations1" Type="AuthorizationsModel.Store.AchAuthorizations" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="AchAuthorizations">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AchAuthorizations1">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Authorizations_AchAuthorizations">
+          <End Role="ContactInformation" Type="AuthorizationsModel.Store.ContactInformation" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AchAuthorizations" Type="AuthorizationsModel.Store.AchAuthorizations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ContactInformation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AchAuthorizations">
+              <PropertyRef Name="ContactInformation_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Authorizations_CheckAuthorizations">
+          <End Role="ContactInformation" Type="AuthorizationsModel.Store.ContactInformation" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CheckAuthorizations" Type="AuthorizationsModel.Store.CheckAuthorizations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ContactInformation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CheckAuthorizations">
+              <PropertyRef Name="ContactInformation_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Authorizations_WireAuthorizations">
+          <End Role="ContactInformation" Type="AuthorizationsModel.Store.ContactInformation" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WireAuthorizations" Type="AuthorizationsModel.Store.WireAuthorizations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ContactInformation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WireAuthorizations">
+              <PropertyRef Name="ContactInformation_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AuthorizationsModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="AuthorizationsEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="AchAuthorizations" EntityType="AuthorizationsModel.AchAuthorization" />
+          <EntitySet Name="CheckAuthorizations" EntityType="AuthorizationsModel.CheckAuthorization" />
+          <EntitySet Name="WireAuthorizations" EntityType="AuthorizationsModel.WireAuthorization" />
+          <EntitySet Name="Employees" EntityType="AuthorizationsModel.Employee" />
+          <EntitySet Name="Approvers" EntityType="AuthorizationsModel.Approver" />
+          <EntitySet Name="ContactInformations" EntityType="AuthorizationsModel.ContactInformation" />
+          <AssociationSet Name="FK_AchAuthorizations_AchAuthorizations" Association="AuthorizationsModel.FK_AchAuthorizations_AchAuthorizations">
+            <End Role="AchAuthorization" EntitySet="AchAuthorizations" />
+            <End Role="AchAuthorization1" EntitySet="AchAuthorizations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Authorizations_AchAuthorizations" Association="AuthorizationsModel.FK_Authorizations_AchAuthorizations">
+            <End Role="ContactInformation" EntitySet="ContactInformations" />
+            <End Role="AchAuthorization" EntitySet="AchAuthorizations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Authorizations_CheckAuthorizations" Association="AuthorizationsModel.FK_Authorizations_CheckAuthorizations">
+            <End Role="ContactInformation" EntitySet="ContactInformations" />
+            <End Role="CheckAuthorization" EntitySet="CheckAuthorizations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Authorizations_WireAuthorizations" Association="AuthorizationsModel.FK_Authorizations_WireAuthorizations">
+            <End Role="ContactInformation" EntitySet="ContactInformations" />
+            <End Role="WireAuthorization" EntitySet="WireAuthorizations" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AchAuthorization">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="AccountNumber" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Notes" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+          <Property Name="Amount" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="OriginatingSystem" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="IssuedOn" Type="DateTime" Precision="3" />
+          <Property Name="IsApproved" Type="Boolean" />
+          <Property Type="String" Name="ApproverId" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="ApprovedOn" Precision="3" />
+          <Property Type="String" Name="ErrorDetails" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="ContactInformation_ID" />
+          <NavigationProperty Name="AchAuthorizations1" Relationship="AuthorizationsModel.FK_AchAuthorizations_AchAuthorizations" FromRole="AchAuthorization" ToRole="AchAuthorization1" />
+          <NavigationProperty Name="AchAuthorization1" Relationship="AuthorizationsModel.FK_AchAuthorizations_AchAuthorizations" FromRole="AchAuthorization1" ToRole="AchAuthorization" />
+          <NavigationProperty Name="ContactInformation" Relationship="AuthorizationsModel.FK_Authorizations_AchAuthorizations" FromRole="AchAuthorization" ToRole="ContactInformation" />
+        </EntityType>
+        <EntityType Name="CheckAuthorization">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="Name" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="AccountNumber" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Notes" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="Decimal" Name="Amount" Precision="19" Scale="4" />
+          <Property Type="String" Name="OriginatingSystem" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="IssuedOn" Precision="3" />
+          <Property Type="Boolean" Name="IsApproved" />
+          <Property Type="String" Name="ApproverId" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="ApprovedOn" Precision="3" />
+          <Property Type="Int32" Name="ContactInformation_ID" />
+          <NavigationProperty Name="ContactInformation" Relationship="AuthorizationsModel.FK_Authorizations_CheckAuthorizations" FromRole="CheckAuthorization" ToRole="ContactInformation" />
+        </EntityType>
+        <EntityType Name="WireAuthorization">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="Name" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="AccountNumber" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Notes" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="Decimal" Name="Amount" Precision="19" Scale="4" />
+          <Property Type="String" Name="OriginatingSystem" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="IssuedOn" Precision="3" />
+          <Property Type="Boolean" Name="IsApproved" />
+          <Property Type="String" Name="ApproverId" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="ApprovedOn" Precision="3" />
+          <Property Type="Int32" Name="ContactInformation_ID" />
+          <NavigationProperty Name="ContactInformation" Relationship="AuthorizationsModel.FK_Authorizations_WireAuthorizations" FromRole="WireAuthorization" ToRole="ContactInformation" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="NetworkId" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Password" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="NameFirst" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="NameLast" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="DeviceToken" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Title" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Approver">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Approver1" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ApproverDeviceToken" MaxLength="300" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ContactInformation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Address" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="City" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="State" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ZipCode" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="HomePhone" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="MobilPhone" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="EmailAddress" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AchAuthorizations" Relationship="AuthorizationsModel.FK_Authorizations_AchAuthorizations" FromRole="ContactInformation" ToRole="AchAuthorization" />
+          <NavigationProperty Name="CheckAuthorizations" Relationship="AuthorizationsModel.FK_Authorizations_CheckAuthorizations" FromRole="ContactInformation" ToRole="CheckAuthorization" />
+          <NavigationProperty Name="WireAuthorizations" Relationship="AuthorizationsModel.FK_Authorizations_WireAuthorizations" FromRole="ContactInformation" ToRole="WireAuthorization" />
+        </EntityType>
+        <Association Name="FK_AchAuthorizations_AchAuthorizations">
+          <End Type="AuthorizationsModel.AchAuthorization" Role="AchAuthorization" Multiplicity="1" />
+          <End Type="AuthorizationsModel.AchAuthorization" Role="AchAuthorization1" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="AchAuthorization">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AchAuthorization1">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Authorizations_AchAuthorizations">
+          <End Type="AuthorizationsModel.ContactInformation" Role="ContactInformation" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="AuthorizationsModel.AchAuthorization" Role="AchAuthorization" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ContactInformation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AchAuthorization">
+              <PropertyRef Name="ContactInformation_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Authorizations_CheckAuthorizations">
+          <End Type="AuthorizationsModel.ContactInformation" Role="ContactInformation" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="AuthorizationsModel.CheckAuthorization" Role="CheckAuthorization" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ContactInformation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CheckAuthorization">
+              <PropertyRef Name="ContactInformation_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Authorizations_WireAuthorizations">
+          <End Type="AuthorizationsModel.ContactInformation" Role="ContactInformation" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="AuthorizationsModel.WireAuthorization" Role="WireAuthorization" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ContactInformation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WireAuthorization">
+              <PropertyRef Name="ContactInformation_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AuthorizationsModelStoreContainer" CdmEntityContainer="AuthorizationsEntities">
+          <EntitySetMapping Name="AchAuthorizations">
+            <EntityTypeMapping TypeName="AuthorizationsModel.AchAuthorization">
+              <MappingFragment StoreEntitySet="AchAuthorizations">
+                <ScalarProperty Name="ContactInformation_ID" ColumnName="ContactInformation_ID" />
+                <ScalarProperty Name="ErrorDetails" ColumnName="ErrorDetails" />
+                <ScalarProperty Name="ApprovedOn" ColumnName="ApprovedOn" />
+                <ScalarProperty Name="ApproverId" ColumnName="ApproverId" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="OriginatingSystem" ColumnName="OriginatingSystem" />
+                <ScalarProperty Name="IssuedOn" ColumnName="IssuedOn" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CheckAuthorizations">
+            <EntityTypeMapping TypeName="AuthorizationsModel.CheckAuthorization">
+              <MappingFragment StoreEntitySet="CheckAuthorizations">
+                <ScalarProperty Name="ContactInformation_ID" ColumnName="ContactInformation_ID" />
+                <ScalarProperty Name="ApprovedOn" ColumnName="ApprovedOn" />
+                <ScalarProperty Name="ApproverId" ColumnName="ApproverId" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="IssuedOn" ColumnName="IssuedOn" />
+                <ScalarProperty Name="OriginatingSystem" ColumnName="OriginatingSystem" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WireAuthorizations">
+            <EntityTypeMapping TypeName="AuthorizationsModel.WireAuthorization">
+              <MappingFragment StoreEntitySet="WireAuthorizations">
+                <ScalarProperty Name="ContactInformation_ID" ColumnName="ContactInformation_ID" />
+                <ScalarProperty Name="ApprovedOn" ColumnName="ApprovedOn" />
+                <ScalarProperty Name="ApproverId" ColumnName="ApproverId" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="IssuedOn" ColumnName="IssuedOn" />
+                <ScalarProperty Name="OriginatingSystem" ColumnName="OriginatingSystem" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="AuthorizationsModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="DeviceToken" ColumnName="DeviceToken" />
+                <ScalarProperty Name="NameLast" ColumnName="NameLast" />
+                <ScalarProperty Name="NameFirst" ColumnName="NameFirst" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="NetworkId" ColumnName="NetworkId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Approvers">
+            <EntityTypeMapping TypeName="AuthorizationsModel.Approver">
+              <MappingFragment StoreEntitySet="Approvers">
+                <ScalarProperty Name="ApproverDeviceToken" ColumnName="ApproverDeviceToken" />
+                <ScalarProperty Name="Approver1" ColumnName="Approver" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ContactInformations">
+            <EntityTypeMapping TypeName="AuthorizationsModel.ContactInformation">
+              <MappingFragment StoreEntitySet="ContactInformation">
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="MobilPhone" ColumnName="MobilPhone" />
+                <ScalarProperty Name="HomePhone" ColumnName="HomePhone" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams />
+  </Designer>
+</edmx:Edmx>

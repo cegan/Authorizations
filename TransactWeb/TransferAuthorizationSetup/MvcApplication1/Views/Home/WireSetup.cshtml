@@ -1,0 +1,171 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<script type="text/javascript">
+
+
+    function getWireData() {
+
+        var ach = {};
+
+        ach.Name                = $('#Name').val();
+        ach.AccountNumber       = $('#AccountNumber').val();
+        ach.Amount              = $('#Amount').val();
+        ach.Notes               = $('#Notes').val();
+        ach.ApproverId          = 'EganC';
+        ach.OriginatingSystem   = $('#OriginatingSystem').val();
+        ach.ID                  = $('#SeedValue').val();
+        
+        return ach;
+    }
+
+
+    function SubmitWire() {
+
+        var data = getWireData();
+
+        $.ajax({
+            type: "POST",
+            data: data,
+            async: true,
+            url: '@Url.Action("AddWireTransfer")',
+
+            success: function (id) {
+                
+                SendPushNotification("A new wire approval has arrived", "NewWire", id);
+            },
+
+            error: function (e) {
+
+            }
+        });
+    }
+    
+
+
+    function UpdateWire() {
+
+        var data = getWireData();
+        
+        $.ajax({
+            type: "POST",
+            data: data,
+            async: true,
+            url: '@Url.Action("UpdateWireTransfer")',
+
+            success: function (id) {
+                
+                SendPushNotification("A wire has been updated", "WireUpdate", id);
+               
+            },
+        });
+    }
+    
+
+    function DeleteWire() {
+
+        var data = getWireData();
+
+        $.ajax({
+            type: "POST",
+            data: data,
+            async: true,
+            url: '@Url.Action("DeleteWireTransfer")',
+
+            success: function (id) {
+
+                SendPushNotification("A wire has been deleted", "WireDelete", id);
+               
+            },
+
+            error: function (e) {
+
+            }
+        });
+    }
+    
+    function SendPushNotification(message, type, uniqueId) {
+
+        var notification = {};        
+    
+        notification.message    = message;
+        notification.type       = type;
+        notification.uniqueIds  = uniqueId;
+  
+        $.ajax({
+            type: "GET",
+            data:notification,
+            async: true,
+            url: 'http://192.168.1.5/TransferAuthorizationService/SendNotification'
+        });
+        
+        alert('Your wire has been submitted');
+    }
+    
+    
+    
+  
+</script>
+
+
+
+<table>
+    <tr>
+        <td>Name</td>
+        <td>
+            <input type="text" id ="Name"/>
+        </td>
+    </tr>
+    
+    <tr>
+        <td>Account Number</td>
+        <td>
+            <input type="text" id ="AccountNumber"/>
+        </td>
+
+    </tr>
+    
+    <tr>
+        <td>Amount</td>
+        <td>
+            <input type="text" id ="Amount"/>
+        </td>
+
+    </tr>
+    <tr>
+        <td>Originating System</td>
+        <td>
+            <input type="text" id ="Originating System"/>
+        </td>
+
+    </tr>
+        
+    <tr>
+        <td>Notes</td>
+        <td>
+            <input type="text" id ="Notes"/>
+        </td>
+
+    </tr>
+    
+    <tr>
+        <td>Seed Value</td>
+        <td>
+            <input type="text" id ="SeedValue"/>
+        </td>
+    </tr>
+    
+    
+    <tr>
+        <td>
+            <button id="Test" type="submit" onclick="SubmitWire();">Submit</button>
+            <button id="Update" type="submit" onclick="UpdateWire();">Update</button>
+            <button id="Delete" type="submit" onclick="DeleteWire();">Delete</button>
+        </td>
+
+    </tr>
+        
+</table>
+   

@@ -1,0 +1,225 @@
+﻿@{
+    ViewBag.Title = "Pending ACH Approvals";
+}
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#MenuItemAch").addClass("MenuItemSelected");
+
+        initalizePendingAchGrid();
+        initializeMenu();
+    });
+
+    function initializeMenu() {
+
+        $("#approvalMenu").kendoMenu({
+
+            animation: {
+                open: { effects: "fadeIn" },
+                hoverDelay: 500
+            },
+
+            select: OnMenuItemClick
+        });
+
+    }
+
+    function initalizePendingAchGrid() {
+
+        var dataSource = new kendo.data.DataSource({
+
+            transport:
+            {
+                read:
+                {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("GetPendingWireApprovals")'
+                }
+            },
+            schema: {
+
+                model: {
+
+                    fields:
+                    {
+                        Amount: { type: 'string' },
+                        CheckNumber: { type: 'string' },
+                        CheckSignerId: { type: 'string' },
+                        Payee1: { type: 'string' },
+                        Payee2: { type: 'string' },
+                        Payee3: { type: 'string' }
+                    }
+                }
+            }
+        });
+
+        $('#pendingWiresGrid').kendoGrid({
+
+            dataSource: dataSource,
+
+            columns: [
+                {
+                    field: 'Select', template: '<input type="checkbox" id = ""></input>', width: '68px'
+                },
+                {
+                    field: 'Amount', title: 'Amount'
+                },
+                {
+                    field: 'CheckNumber',
+                    title: 'Check Number',
+                    filterable: true
+                },
+                {
+                    field: 'CheckSignerId', title: 'Check Signer'
+                },
+                {
+                    field: 'Payee1', title: 'Payee 1'
+                },
+                {
+                    field: 'Payee2', title: 'Payee 2'
+                },
+                {
+                    field: 'Payee3', title: 'Payee 3'
+                }
+
+            ],
+
+
+            scrollable: true,
+            width: 1300,
+            height: 275,
+            sortable: true,
+            selectable: true
+        });
+    }
+
+
+
+    function OnMenuItemClick(e) {
+
+        var selectedItem = e.item.id.toLowerCase();
+
+        if (selectedItem == "all") {
+
+            SelectAllWires(true);
+        }
+
+        else if (selectedItem == "none") {
+
+            SelectAllWires(false);
+        }
+
+
+        else if (selectedItem == "refresh") {
+
+            $("#pendingWiresGrid").data("kendoGrid").refresh();
+        }
+
+        else if (selectedItem == "approve") {
+
+
+            var atLeastOneIsChecked = $(':checkbox:checked').length > 0;
+
+            if (atLeastOneIsChecked) {
+
+                if (confirm("Approve Selected Item(s)?", "Approve")) {
+
+                    ApproveSelectedWires();
+                }
+            }
+        }
+
+        $("#approvalMenu").data("kendoMenu").close("#Select");
+    }
+
+
+    function SelectAllWires(shouldSelect) {
+
+        $(":checkbox").each(function () {
+
+            this.checked = shouldSelect;
+
+        });
+    }
+
+
+    function ApproveSelectedWires() {
+
+        var errorsFound = false;
+
+        $(":checkbox:checked").each(function () {
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ApproveWire")',
+                data: "1",
+                success: function (resp) {
+
+                    $(this).addClass("success");
+                },
+
+                error: function (e) {
+
+                    errorsFound = true;
+                }
+            });
+        });
+
+        if (!errorsFound) {
+
+            alert('All Item(s) Approved Successfully!');
+        }
+
+    }
+    
+
+</script>
+
+
+<table>
+    
+    <tr>
+        <td style="vertical-align:top;font-family:Sans-Serif;font-size:22px;color:#998675">Wires</td>
+    </tr>
+    <tr>
+        <td style="vertical-align:top;font-family:Sans-Serif;font-size:12px;color:#c7b299">waiting for your approval</td>
+      
+    </tr>
+</table>
+    
+    
+<table style="border-style:solid;border-width:1px;border-color:#79956c;height:350px;padding-top:10px;padding-left:10px">
+   
+    <tr>
+        <td style="font-family:Sans-Serif;font-size:12px;width:200px">
+            
+            <ul id="approvalMenu">
+                <li id="Select">Select
+                    <ul>
+                        <li id="All">All</li>
+                        <li id="None">None</li>
+                    </ul>
+                </li>
+                <li id="Approve">Approve Selected Item(s)</li>
+                <li id="Refresh">Refresh</li>
+            </ul>
+           
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <div id="pendingWiresGrid" style="font-family:Sans-Serif;font-size:12px;width:1000px;"></div>
+        </td>
+    </tr>
+</table>
+
+
+
+

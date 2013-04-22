@@ -1,0 +1,4 @@
+C:\MyProjects\TransactWeb\ApprovalsService\bin\ApprovalsService.dll
+C:\MyProjects\TransactWeb\ApprovalsService\bin\ApprovalsService.pdb
+C:\MyProjects\TransactWeb\ApprovalsService\obj\Debug\ApprovalsService.dll
+C:\MyProjects\TransactWeb\ApprovalsService\obj\Debug\ApprovalsService.pdb

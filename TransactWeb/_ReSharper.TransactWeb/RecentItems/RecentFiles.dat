@@ -1,0 +1,55 @@
+﻿<RecentFiles>
+  <RecentFiles>
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Views/d:Home/f:About.cshtml" caret="0" fromTop="0" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Views/d:Shared/f:_LoginPartial.cshtml" caret="0" fromTop="0" />
+    <File id="ED45CCB9-3AEF-4934-B631-0E9C97D9EB7B/f:Web.config" caret="500" fromTop="8" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Models/f:AccountModels.cs" caret="437" fromTop="10" />
+    <File id="8C752076-43D3-4FE0-9AB7-28CE9EDD8663/d:Areas/d:Approvals/d:Controllers/f:AchController.cs" caret="4813" fromTop="38" />
+    <File id="8C752076-43D3-4FE0-9AB7-28CE9EDD8663/f:Web.config" caret="1315" fromTop="22" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Views/d:Home/f:CheckSetup.cshtml" caret="408" fromTop="16" />
+    <File id="8C752076-43D3-4FE0-9AB7-28CE9EDD8663/f:packages.config" caret="671" fromTop="12" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/f:Web.config" caret="2575" fromTop="10" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/f:packages.config" caret="2095" fromTop="24" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/f:Model1.Context.cs" caret="645" fromTop="17" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Models/f:PendingAchApproval.cs" caret="552" fromTop="19" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Controllers/f:AccountController.cs" caret="0" fromTop="0" />
+    <File id="ED45CCB9-3AEF-4934-B631-0E9C97D9EB7B/d:ServiceContracts/f:ITransferAuthorizationService.cs" caret="5966" fromTop="15" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Views/d:Home/f:AchSetup.cshtml" caret="0" fromTop="0" />
+    <File id="8C752076-43D3-4FE0-9AB7-28CE9EDD8663/d:Areas/d:Approvals/d:Hubs/f:ApprovalHub.cs" caret="306" fromTop="13" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Views/d:Shared/f:_Layout.cshtml" caret="1205" fromTop="28" />
+    <File id="8C752076-43D3-4FE0-9AB7-28CE9EDD8663/d:Areas/d:Approvals/d:Views/d:Shared/f:_Layout.cshtml" caret="1000" fromTop="15" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Scripts/f:jquery.signalR-1.0.1.min.js" caret="0" fromTop="0" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Scripts/f:jquery.signalR-1.0.1.js" caret="870" fromTop="26" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/f:Global.asax.cs" caret="750" fromTop="21" />
+    <File id="C766B7E2-CDF0-4347-9A9C-887547C5AC02/f:AuthorizationHub.cs" caret="159" fromTop="5" />
+    <File id="8C752076-43D3-4FE0-9AB7-28CE9EDD8663/d:Areas/d:Approvals/d:Views/d:Ach/f:PendingAch.cshtml" caret="5185" fromTop="19" />
+    <File id="ED45CCB9-3AEF-4934-B631-0E9C97D9EB7B/d:DataContracts/f:Contact.cs" caret="280" fromTop="11" />
+    <File id="ED45CCB9-3AEF-4934-B631-0E9C97D9EB7B/f:ContactInformation.cs" caret="604" fromTop="16" />
+    <File id="ED45CCB9-3AEF-4934-B631-0E9C97D9EB7B/d:DataContracts/f:PendingAchApproval.cs" caret="821" fromTop="22" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Controllers/f:HomeController.cs" caret="1591" fromTop="17" />
+    <File id="A91E03EF-6532-4896-89C4-9FCEC1D8D4DB/f:NotificationPayload.cs" caret="1704" fromTop="22" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Views/d:Home/f:Index.cshtml" caret="4555" fromTop="0" />
+    <File id="ED45CCB9-3AEF-4934-B631-0E9C97D9EB7B/f:TransaferAuthorizationServices.cs" caret="7291" fromTop="36" />
+  </RecentFiles>
+  <RecentEdits>
+    <File id="8C752076-43D3-4FE0-9AB7-28CE9EDD8663/d:Areas/d:Approvals/d:Views/d:Shared/f:_Layout.cshtml" caret="6354" fromTop="30" />
+    <File id="8C752076-43D3-4FE0-9AB7-28CE9EDD8663/d:Areas/d:Approvals/d:Hubs/f:ApprovalHub.cs" caret="156" fromTop="6" />
+    <File id="8C752076-43D3-4FE0-9AB7-28CE9EDD8663/d:Areas/d:Approvals/d:Controllers/f:AchController.cs" caret="1359" fromTop="23" />
+    <File id="ED45CCB9-3AEF-4934-B631-0E9C97D9EB7B/f:Web.config" caret="57" fromTop="2" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/f:Web.config" caret="4577" fromTop="12" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Models/f:PendingAchApproval.cs" caret="86" fromTop="3" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/f:packages.config" caret="2477" fromTop="29" />
+    <File id="8C752076-43D3-4FE0-9AB7-28CE9EDD8663/f:packages.config" caret="785" fromTop="15" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Controllers/f:HomeController.cs" caret="9241" fromTop="41" />
+    <File id="ED45CCB9-3AEF-4934-B631-0E9C97D9EB7B/d:ServiceContracts/f:ITransferAuthorizationService.cs" caret="5936" fromTop="12" />
+    <File id="8C752076-43D3-4FE0-9AB7-28CE9EDD8663/d:Areas/d:Approvals/d:Views/d:Ach/f:PendingAch.cshtml" caret="9313" fromTop="25" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Views/d:Shared/f:_Layout.cshtml" caret="531" fromTop="8" />
+    <File id="C766B7E2-CDF0-4347-9A9C-887547C5AC02/f:AuthorizationHub.cs" caret="225" fromTop="9" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/f:Global.asax.cs" caret="0" fromTop="0" />
+    <File id="ED45CCB9-3AEF-4934-B631-0E9C97D9EB7B/d:DataContracts/f:Contact.cs" caret="140" fromTop="5" />
+    <File id="ED45CCB9-3AEF-4934-B631-0E9C97D9EB7B/f:ContactInformation.cs" caret="1012" fromTop="27" />
+    <File id="ED45CCB9-3AEF-4934-B631-0E9C97D9EB7B/d:DataContracts/f:PendingAchApproval.cs" caret="821" fromTop="22" />
+    <File id="45D953C1-39AC-4F5A-8A32-693328DA852F/d:Views/d:Home/f:Index.cshtml" caret="3196" fromTop="29" />
+    <File id="ED45CCB9-3AEF-4934-B631-0E9C97D9EB7B/f:TransaferAuthorizationServices.cs" caret="7264" fromTop="34" />
+  </RecentEdits>
+</RecentFiles>

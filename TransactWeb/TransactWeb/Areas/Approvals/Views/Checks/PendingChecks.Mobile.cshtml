@@ -1,0 +1,284 @@
+﻿@{
+    ViewBag.Title = "Pending Check Approvals";
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        intitializeApprovalTabs();
+        initalizePendingChecksGrid();
+        initalizeChecksApprovalHistoryGrid();
+
+        //UpdateMenu();
+
+        installEventListeners();
+    });
+
+
+    function installEventListeners() {
+
+        $('#ApproveSelectedChecks').click(function () {
+
+            ApproveSelectedItems();
+        });
+
+        $('#MultipleSelect').click(function () {
+
+            ToggleSelectAll('MultipleSelect');
+        });
+    }
+
+
+    function UpdateMenu() {
+
+        var rowCount = $('#pendingChecksGrid tr').length;
+
+        if (rowCount == 0) {
+
+            $('#wrapper').hide();
+            $("#CheckCount").text("");
+            $('#NoRowsFoundTemplate').show();
+        }
+        else {
+
+            $("#CheckCount").text("(" + rowCount + ")");
+        }
+    }
+
+    function intitializeApprovalTabs() {
+
+        $("#approvalTabs").kendoTabStrip({
+            animation: {
+
+                open: {
+                    effects: "fadeIn"
+                }
+            }
+        });
+    }
+
+
+    function initalizeChecksApprovalHistoryGrid() {
+
+        var dataSource = new kendo.data.DataSource({
+
+            transport: {
+
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("GetCheckApprovalHistory")'
+                }
+            },
+            schema: {
+
+                model: {
+
+                    fields: {
+                        ApprovalDate: { type: 'string' },
+                        Amount: { type: 'string' },
+                        CheckNumber: { type: 'string' },
+                        CheckSignerId: { type: 'string' }
+                    }
+                }
+            }
+        });
+
+
+        $('#ChecksApprovalHistoryGrid').kendoGrid({
+
+            dataSource: dataSource,
+
+            columns: [
+            { field: 'ApprovalDate', title: 'Approval Date/Time' },
+            { field: 'Amount', title: 'Amount' },
+            { field: 'CheckNumber', title: 'Check Number' },
+            { field: 'CheckSignerId', title: 'Check Signer' },
+        ],
+
+            sortable: true,
+            scrollable: true,
+            width: 1300,
+            selectable: true
+
+        });
+    }
+
+    
+
+    function initalizePendingChecksGrid() {
+
+        var dataSource = new kendo.data.DataSource({
+
+            transport:
+            {
+                read:
+                {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("GetPendingCheckApprovals")'
+                }
+            },
+            schema: {
+
+                model: {
+
+                    fields:
+                    {
+                        Amount: { type: 'string' },
+                        CheckNumber: { type: 'string' },
+                        CheckSignerId: { type: 'string' },
+                        Payee1: { type: 'string' },
+                        Payee2: { type: 'string' },
+                        Payee3: { type: 'string' }
+                    }
+                }
+            }
+        });
+
+        $('#pendingChecksGrid').kendoGrid({
+
+            dataSource: dataSource,
+           
+            columns: [
+                {
+                    field: 'Select', template: '<input type="checkbox" id = "#= Id #"/>', width: '30px'
+                },
+                {
+                     field: 'Amount', title: 'Amount'
+                },
+                {
+                    field: 'CheckNumber',
+                    title: 'Check Number',
+                    filterable: true
+                },
+                {
+                     field: 'CheckSignerId', title: 'Check Signer'
+                },
+                {
+                     field: 'Payee1', title: 'Payee 1'
+                 },
+                {
+                     field: 'Payee2', title: 'Payee 2'
+                },
+                {
+                     field: 'Payee3', title: 'Payee 3'
+                }
+
+            ],
+
+            scrollable: true,
+            width: 1300,
+            height: 275,
+            selectable: true
+        });
+    }
+
+
+    function ApproveSelectedItems() {
+
+        var errorsFound = false;
+
+        var atLeastOneIsChecked = $(':checkbox:checked').length > 0;
+
+        if (atLeastOneIsChecked) {
+
+            if (confirm("Approve Selected Item(s)?", "Approve")) {
+
+                $('#pendingChecksGrid tr').each(function () {
+
+                    var currentRow = $(this);
+                    var currentCheckBox = $(this).find('input:checkbox');
+
+                    if (currentCheckBox.attr("checked") == "checked") {
+
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("ApproveCheck")',
+                            data: currentCheckBox.attr('id'),
+                            success: function (resp) {
+
+                                currentRow.remove();
+                                UpdateMenu();
+                            },
+
+                            error: function (e) {
+
+                                alert('errorsFound');
+                                errorsFound = true;
+                            }
+                        });
+                    }
+                });
+            }
+        }
+        else {
+
+            alert('No Items Selected To Approve');
+        }
+    }
+    
+
+</script>
+
+<div id="RootApprovalTabs" class="ApprovalTabs">
+    
+    <div id="approvalTabs" style="width:1000px">
+        <ul>
+            <li>Pending Checks</li>
+            <li>Approval History</li>
+        </ul>
+
+        <div id="PendingApprovalsTab" style="background-color:#fef8f0;padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px">
+            
+            <div id="wrapper" style="background-color:#fef8f0;padding-left:5px;padding-right:5px;padding-top:5px;padding-bottom:0px">
+                
+                <table id="pendingChecksGrid">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px"><input id="MultipleSelect" type="checkbox"/></th>
+                            <th data-field="Amount">Amount</th>
+                            <th data-field="CheckNumber">Check Number</th>
+                            <th data-field="CheckSignerId">Check Signer</th>
+                            <th data-field="Payee1">Payee 1</th>
+                            <th data-field="Payee2">Payee 2</th>
+                            <th data-field="Payee3">Payee 3</th>
+                        </tr>
+                    </thead>
+                </table>
+                
+                <div class="k-content" style="padding-top:15px;padding-left: 0px;padding-bottom:15px;background-color: #fef8f0;border-color: #fef8f0">
+                    <button id="ApproveSelectedChecks" style="padding-left:8px;padding-right:9px;background-color:#4aa3b5;color:white" class="k-button">Approve Item(s)</button>
+                </div>
+                
+            </div>
+            
+            <div id="NoRowsFoundTemplate" style="display:none;height:200px;text-align:center;">
+                <p>The Are No Items To Approve</p>
+            </div>
+            
+        </div>
+
+        <div id="ChecksApprovalHistoryTab" style="padding-left: 0px;padding-right:0px;padding-top: 0px;padding-bottom: 0px">
+            
+            <div id="wrapper2" style="background-color:#fef8f0;padding-left:5px;padding-right:5px;padding-top:5px;padding-bottom:0px">
+
+                <table id="ChecksApprovalHistoryGrid">
+                    <thead>
+                        <tr>
+                            <th data-field="Payee1">Approval Date/Time</th>
+                            <th data-field="Amount">Amount</th>
+                            <th data-field="CheckNumber">Check Number</th>
+                            <th data-field="CheckSignerId">Check Signer</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

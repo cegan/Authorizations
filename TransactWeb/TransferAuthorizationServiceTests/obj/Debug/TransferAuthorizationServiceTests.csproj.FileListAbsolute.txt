@@ -1,0 +1,9 @@
+C:\MyProjects\TransactWeb\TransferAuthorizationServiceTests\bin\Debug\TransferAuthorizationServiceTests.dll
+C:\MyProjects\TransactWeb\TransferAuthorizationServiceTests\bin\Debug\TransferAuthorizationServiceTests.pdb
+C:\MyProjects\TransactWeb\TransferAuthorizationServiceTests\bin\Debug\TransferAuthorizationService.dll
+C:\MyProjects\TransactWeb\TransferAuthorizationServiceTests\bin\Debug\TransferAuthorizationWeb.dll
+C:\MyProjects\TransactWeb\TransferAuthorizationServiceTests\bin\Debug\TransferAuthorizationService.pdb
+C:\MyProjects\TransactWeb\TransferAuthorizationServiceTests\bin\Debug\TransferAuthorizationWeb.pdb
+C:\MyProjects\TransactWeb\TransferAuthorizationServiceTests\obj\Debug\TransferAuthorizationServiceTests.csprojResolveAssemblyReference.cache
+C:\MyProjects\TransactWeb\TransferAuthorizationServiceTests\obj\Debug\TransferAuthorizationServiceTests.dll
+C:\MyProjects\TransactWeb\TransferAuthorizationServiceTests\obj\Debug\TransferAuthorizationServiceTests.pdb

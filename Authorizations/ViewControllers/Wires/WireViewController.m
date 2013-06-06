@@ -6,28 +6,15 @@
 //  Copyright (c) 2012 Casey Egan. All rights reserved.
 //
 
-#import "ArchiveUtilities.h"
+
 #import "WireViewController.h"
-#import "WireDetailViewController.h"
-#import "CustomAchTableViewCell.h"
-#import "ALToolbar.h"
-#import "WireDetail.h"
-#import "StringUtilities.h"
-#import "AuthorizationUIUtilities.h"
-#import "CalendarUtilities.h"
-#import "NetworkUtilities.h"
-#import "NotificationUtilities.h"
-#import "AuthorizationService.h"
-#import "Constants.h"
-#import "Enums.h"
-#import "BadgeUpdater.h"
-#import "BlockActionSheet.h"
+
 
 @interface WireViewController()
 
 
 - (void) setDelegates;
-- (void) setPullToRefresh;
+- (void) setRefreshControl;
 - (void) setNavigationTitle;
 - (void) registerNotifications;
 - (void) processApprovals:(NSMutableArray *) itemsToApprove;
@@ -47,7 +34,6 @@
 @synthesize tableView           = _tableView;
 @synthesize editButton          = _editButton;
 @synthesize cancelButton        = _cancelButton;
-@synthesize pullToRefresh       = _pullToRefresh;
 @synthesize isEditing           = _isEditing;
 @synthesize authorizationList   = _authorizationList;
 
@@ -76,13 +62,6 @@
 - (void) setNavigationTitle{
     
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"WiresRed.png"]];
-}
-
-- (void) setPullToRefresh{
-    
-    self.pullToRefresh = [[PullToRefreshView alloc] initWithScrollView:(UIScrollView *) self.tableView];
-    self.pullToRefresh.backgroundColor = [UIColor whiteColor];
-    [self.tableView addSubview:self.pullToRefresh];
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -126,10 +105,22 @@
 
 - (void) setDelegates{
     
-    self.pullToRefresh.delegate = self;
     self.tableView.delegate     = self;
     self.tableView.dataSource   = self;
     self.approvalToolbar.delegate = self;
+}
+
+- (void) setRefreshControl{
+    
+    self.refreshControl             = [[UIRefreshControl alloc] init];
+    self.refreshControl.tintColor   = [UIColor colorWithRed:124.00/255.0 green:104.0/255.00 blue:76.0/255.00 alpha:1.0];
+    
+    
+    self.refreshControl.attributedTitle = [StringUtilities getRefreshControlAttributedStringWithValue:@"Pull To Refresh"];
+    
+    [self.refreshControl addTarget:self action:@selector(handleWireViewRefresh:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:self.refreshControl];
+    
 }
 
 - (void) registerNotifications{
@@ -140,6 +131,24 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveUpdateNotification:) name:@"didReceiveUpdateNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveNewAuthorizationNotification:) name:@"didReceiveNewAuthorizationNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveAuthorizationReceiptNotification:) name:@"didReceiveAuthorizationReceiptNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didFinishRefreshingWires:) name:@"didFinishRefreshingWires" object:nil];
+}
+
+
+- (void) didFinishRefreshingWires:(NSNotification *)notification{
+    
+    NSData *response = [[notification userInfo] valueForKey:@"didFinishRefreshingWires"];
+    
+    self.authorizationList = [ParsingUtilities parseWireAuthorizationResults:response];
+    
+    [self.tableView reloadData];
+    
+    
+    [NotificationUtilities sendDataRefreshNotification:kNewIncomingWireAuthorization andCount:self.authorizationList.count];
+    
+    
+    [self.refreshControl endRefreshing];
+    self.refreshControl.attributedTitle = [StringUtilities getRefreshControlAttributedStringWithValue:@"Pull To Refresh"];
 }
 
 - (void) didReceiveDeleteNotification:(NSNotification *)notification{
@@ -261,20 +270,9 @@
     [self endTableViewEdit];
 }
 
-
 - (void) retrieveWireData{
     
-    ServiceResponse *serviceResponse = [[[AuthorizationService alloc] init] getWireAuthorizations];
-    
-    if(serviceResponse.wasSuccessful){
-        
-        self.authorizationList = serviceResponse.responseData;
-        [NotificationUtilities sendDataRefreshNotification:kNewIncomingWireAuthorization andCount:self.authorizationList.count];
-    }
-    else{
-        
-        //display error?
-    }
+    [[[AuthorizationService alloc] init] getWireAuthorizationsAsyncWithCallback:@"didFinishRefreshingWires"];
 }
 
 - (void) wireApprovalRequested:(NSNotification *)notification{
@@ -284,14 +282,12 @@
         if(![NetworkUtilities isRemoteHostReachable]){
             
             [AuthorizationUIUtilities showModalNetworkError:kAuthorizationServiceNotReachable InView:self.view];
-            [self.pullToRefresh finishedLoading];
             return;
         }
     }
     else{
         
         [AuthorizationUIUtilities showModalNetworkError:kNoInternetConnection InView:self.view];
-        [self.pullToRefresh finishedLoading];
         return;
     }
     
@@ -301,33 +297,20 @@
     [self processApprovals:item];
 }
 
-- (void) pullToRefreshViewShouldRefresh:(PullToRefreshView *)view;{
+- (void) handleWireViewRefresh:(UIRefreshControl *)sender{
+    
     
     if([NetworkUtilities hasConnection]){
         
-        if(![NetworkUtilities isRemoteHostReachable]){
-            
-            [AuthorizationUIUtilities showModalNetworkError:kAuthorizationServiceNotReachable InView:self.view];
-            [self.pullToRefresh finishedLoading];
-            return;
-        }
+        self.refreshControl.attributedTitle = [StringUtilities getRefreshControlAttributedStringWithValue:@"Refreshing Wires"];
+        [self retrieveWireData];
     }
     else{
         
         [AuthorizationUIUtilities showModalNetworkError:kNoInternetConnection InView:self.view];
-        [self.pullToRefresh finishedLoading];
         return;
     }
     
-    [self reloadTableData];
-    
-}
-
-- (void) reloadTableData{
-    
-    [self retrieveWireData];
-    [self.tableView reloadData];
-    [self.pullToRefresh finishedLoading];
 }
 
 - (void) viewDidLoad{
@@ -335,7 +318,7 @@
     [super viewDidLoad];
     
     [self setNavigationTitle];
-    [self setPullToRefresh];
+    [self setRefreshControl];
     [self setTableViewProperties];
     [self registerNotifications];
     [self setDelegates];
@@ -350,37 +333,21 @@
 
 - (void) viewWillAppear:(BOOL)animated {
     
+    if(!self.authorizationList){
+        
+        [self retrieveWireData];
+    }
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
     
-    
+    [self endTableViewEdit];
 }
 
 - (void) approveSelectedItems:(NSMutableArray *) itemsToApprove{
     
     [[[AuthorizationService alloc] init] authorizeWire:itemsToApprove AsAsync:YES];
 }
-
-- (NSArray *) getErrorItems:(NSNotification *) notification{
-    
-    
-    NSMutableArray *failedItems  = [[NSMutableArray alloc] init];
-    NSArray *items               = [[[notification userInfo] valueForKey:@"failedItems"] componentsSeparatedByString:@","];
-    
-    for (NSString *item in items){
-        
-        for (AchDetail *detail in self.authorizationList){
-            
-            if(item == detail.iD){
-                
-                detail.isApproved = NO;
-                detail.hasApprovalErrors = YES;
-                [failedItems addObject:detail];
-            }
-        }
-    }
-    
-    return failedItems;
-}
-
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

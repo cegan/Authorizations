@@ -41,6 +41,9 @@
 
 }
 
+
+
+
 + (void) incrementBadgeValueForMenuItem:(NSString *) menuItem{
     
     BadgeInformation *badgeCounts       = [[BadgeInformation alloc] init];
@@ -67,8 +70,6 @@
     
     [UIApplication sharedApplication].applicationIconBadgeNumber = (badgeCounts.pendingAchCount + badgeCounts.pendingCheckCount + badgeCounts.pendingWireCount);
 }
-
-
 
 + (void) decrementBadgeForType:(NSString *) type withValue:(int) value{
     

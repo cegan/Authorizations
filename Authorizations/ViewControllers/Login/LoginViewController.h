@@ -16,10 +16,9 @@
 #import "UserInformation.h"
 #import "Constants.h"
 #import "Enums.h"
+#import "BlockActionSheet.h"
 
-@interface LoginViewController : UIViewController<UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate>{
-    
-    
+@interface LoginViewController : UIViewController<UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource>{
     
     UIActivityIndicatorView *activityIndicator;
 }
@@ -28,6 +27,9 @@
 @property (weak, nonatomic) IBOutlet UITableView *loginTable;
 @property (retain, nonatomic) UITextField *userNameTF;
 @property (retain, nonatomic) UITextField *passwordTF;
+
+@property (weak, nonatomic) IBOutlet UILabel *footerLabel;
+
 
 
 @end

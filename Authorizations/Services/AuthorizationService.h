@@ -23,17 +23,24 @@
 -(NSArray *) getWireAuthorizationHistory;
 
 
--(void) loginUser:(NSString *) userId;
+- (void) loginUser:(NSString *) userId;
 - (void) resetUserData:(NSString *) userId;
+
+- (void) getAuthorizationHistoryAsync;
+
+- (void) getAchAuthorizationsAsyncWithCallBack:(NSString *) callBack;
+- (void) getCheckAuthorizationsAsyncWithCallBack:(NSString *) callBack;
+- (void) getWireAuthorizationsAsyncWithCallback:(NSString *) callBack;
+
+-(void) authorizeAch:(NSMutableArray *) achsToAuthorize AsAsync:(BOOL) async;
+-(void) authorizeCheck:(NSMutableArray *) checksToAuthorize AsAsync:(BOOL) async;
+-(void) authorizeWire:(NSMutableArray *) wiresToAuthorize AsAsync:(BOOL) async;
+
+
 -(ServiceResponse *) getAchAuthorizationById:(NSString *) identifier;
 -(ServiceResponse *) getCheckAuthorizationById:(NSString *) identifier;
 -(ServiceResponse *) getWireAuthorizationById:(NSString *) identifier;
--(ServiceResponse *) getAchAuthorizations;
--(ServiceResponse *) getCheckAuthorizations;
--(ServiceResponse *) getWireAuthorizations;
--(ServiceResponse *) authorizeAch:(NSMutableArray *) achAuthorizations AsAsync:(BOOL) async;
--(ServiceResponse *) authorizeCheck:(NSMutableArray *) checksToAuthorize AsAsync:(BOOL) async;
--(ServiceResponse *) authorizeWire:(NSMutableArray *) wiresToAuthorize AsAsync:(BOOL) async;
 
+- (NSData *) getAchAuthorizationsAsAsync:(BOOL) asAsync withCallBack:(NSString *) callBack;
 
 @end

@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "AuthorizationsBaseViewController.h"
-#import "PullToRefreshView.h"
 #import "ALToolbar.h"
 #import "Reachability.h"
 
 
-@interface CheckViewController : AuthorizationsBaseViewController <ALToolbarDelegate,UIGestureRecognizerDelegate,UITableViewDelegate,UITableViewDataSource,PullToRefreshViewDelegate>{
+@interface CheckViewController : AuthorizationsBaseViewController <ALToolbarDelegate,UIGestureRecognizerDelegate,UITableViewDelegate,UITableViewDataSource>{
     
     Reachability* internetReachable;
     Reachability* hostReachable;

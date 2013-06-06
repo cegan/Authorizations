@@ -7,15 +7,7 @@
 //
 
 #import "HistoryViewController.h"
-#import "HistoryDetailViewController.h"
-#import "HistoryTableViewCell.h"
-#import "AuthorizationUIUtilities.h"
-#import "AuthorizationService.h"
-#import "ArchiveUtilities.h"
-#import "Enums.h"
-#import "Constants.h"
-#import "ALToolbar.h"
-#import "BlockActionSheet.h"
+
 
 @interface HistoryViewController ()
 
@@ -28,20 +20,35 @@
 - (void) reloadHistoryTable;
 - (void) setHistorySearch;
 - (void) enableHistoryControls:(BOOL) enabled;
+- (void) displaySortingControl;
+- (void) removeSortingControl;
 
 @end
 
 @implementation HistoryViewController
 
-@synthesize results         = _results;
-@synthesize historyTable    = _historyTable;
-@synthesize historySearch   = _historySearch;
-@synthesize historyToolbar  = _historyToolbar;
-@synthesize refreshControl  = _refreshControl;
-@synthesize sortToolbarItem = _sortToolbarItem;
+@synthesize results                 = _results;
+@synthesize historyTable            = _historyTable;
+@synthesize historySearch           = _historySearch;
+@synthesize historyToolbar          = _historyToolbar;
+@synthesize refreshControl          = _refreshControl;
+@synthesize sortToolbarItem         = _sortToolbarItem;
+@synthesize sortingControl          = _sortingControl;
+@synthesize isSortingVisible        = _isSortingVisible;
+@synthesize isKeyboardVisible       = _isKeyboardVisible;
+@synthesize tapGesture              = _tapGesture;
 
 
 - (IBAction) onDeleteButtonTouch:(id)sender {
+    
+    if([self isSortingVisible]){
+        
+        [self removeSortingControl];
+    }
+    if([self isKeyboardVisible]){
+        
+        [self.historySearch resignFirstResponder];
+    }
     
     BlockActionSheet *sheet = [BlockActionSheet sheetWithTitle:@"Delete History"];
     
@@ -62,33 +69,33 @@
 
 - (void) registerNotifications{
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide) name:UIKeyboardDidHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveAuthorizationReceiptNotification:) name:@"didReceiveAuthorizationReceiptNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didFinishRefreshingAchHistory:) name:@"didFinishRefreshingAchHistory" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didFinishRefreshingCheckHistory:) name:@"didFinishRefreshingCheckHistory" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didFinishRefreshingWireHistory:) name:@"didFinishRefreshingWireHistory" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveSorting:) name:@"didReceiveSorting" object:nil];
 }
 
-- (void) installToolBar{
+- (void) didReceiveSorting:(NSNotification *)notification{
     
-    _historyToolbar = [[ALToolbar alloc] initWithFrame:CGRectMake(0, 460, 320, 44)];
+    NSNumber *selectedSortIndex = [[notification userInfo] valueForKey:@"SlectedSortIndex"];
     
-    [_historyToolbar setBackgroundImage:@"historyToolbar.png"];
-    [_historyToolbar setBackgroundColor:[UIColor clearColor]];
-    [_historyToolbar setBackgroundContentMode:UIViewContentModeBottom];
-    [_historyToolbar setDelegate:self];
-    [_historyToolbar setAnimatingDirection:ALToolbarAnimationDirectionBottom];
-    [_historyToolbar setLayoutMode:ALToolbarButtonsLayoutModeManual];
+    [SortingUtilities sortHistoryItems:self.results ByType:[selectedSortIndex intValue]];
     
-    self.sortToolbarItem =[[ALToolbarItem alloc]initWithFrame:CGRectMake(257, 8, 60, 30)];
-    [self.sortToolbarItem setImage:[UIImage imageNamed:@"SortBrown.png"] forState:UIControlStateNormal];
-   
-    [_historyToolbar setItems:[NSArray arrayWithObjects:self.sortToolbarItem, nil]];
-    
-
-    [self.view addSubview:_historyToolbar];
+    [self.historyTable reloadData];
+    [self removeSortingControl];
 }
 
-- (void) enableHistoryControls:(BOOL) enabled{
+- (void) keyboardDidShow{
     
-    self.navigationItem.rightBarButtonItem.enabled = enabled;
-    self.sortToolbarItem.enabled                   = enabled;
+    self.isKeyboardVisible = YES;
+}
+
+- (void) keyboardDidHide{
+    
+    self.isKeyboardVisible = NO;
 }
 
 - (void) didReceiveAuthorizationReceiptNotification:(NSNotification *)notification{
@@ -96,34 +103,64 @@
     [self reloadHistoryTable];
 }
 
+- (void) didFinishRefreshingAchHistory:(NSNotification *)notification{
+    
+    NSData *response    = [[notification userInfo] valueForKey:@"didFinishRefreshingAchHistory"];
+    NSArray *achHistory = [ParsingUtilities parseAchAuthorizationHistoryResults:response];
+    
+    if(achHistory){
+        
+        [ArchiveUtilities archiveApprovedItems:achHistory withKey:kAchDataKey];
+    }
+}
+
+- (void) didFinishRefreshingCheckHistory:(NSNotification *)notification{
+    
+    NSData *response        = [[notification userInfo] valueForKey:@"didFinishRefreshingCheckHistory"];
+    NSArray *checkHistory   = [ParsingUtilities parseCheckAuthorizationHistoryResults:response];
+    
+    if(checkHistory){
+        
+        [ArchiveUtilities archiveApprovedItems:checkHistory withKey:kCheckDataKey];
+    }
+}
+
+- (void) didFinishRefreshingWireHistory:(NSNotification *)notification{
+    
+    NSData *response = [[notification userInfo] valueForKey:@"didFinishRefreshingWireHistory"];
+    
+    NSArray *wireHistory   = [ParsingUtilities parseWireAuthorizationHistoryResults:response];
+    
+    if(wireHistory){
+        
+        [ArchiveUtilities archiveApprovedItems:wireHistory withKey:kWireDataKey];
+    }
+    
+
+    [self reloadHistoryTable];
+    [self.refreshControl endRefreshing];
+}
+
 - (void) initializeHistoryData{
     
-    _results = [ArchiveUtilities getAllHistoricalItems];
+    self.results = [ArchiveUtilities getAllHistoricalItems];
     
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"arrivalDate" ascending:FALSE];
-    [_results sortUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];   
+    [self.results sortUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 }
 
 - (void) setTableViewProperties{
     
-    _historyTable.backgroundColor      = [UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewBackgroundBrown.png"]];
-    _historyTable.separatorColor       = BROWN_SEPERATOR_COLOR_HALF_ALPHA;
+    self.historyTable.contentOffset        =  CGPointMake(0, 44);
+    self.historyTable.backgroundColor      = [UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewBackgroundBrown.png"]];
+    self.historyTable.separatorColor       = BROWN_SEPERATOR_COLOR_HALF_ALPHA;
 }
 
-- (void) handleRefresh{
-    
-    NSArray *achHistory     = [[[AuthorizationService alloc] init] getAchAuthorizationHistory];
-    NSArray *checkHistory   = [[[AuthorizationService alloc] init] getCheckAuthorizationHistory];
-    NSArray *wireHistory    = [[[AuthorizationService alloc] init] getWireAuthorizationHistory];
+- (void) handleManualRefresh{
     
     [ArchiveUtilities deleteAllArchivedApprovals];
-    [ArchiveUtilities archiveApprovedItems:achHistory withKey:kAchDataKey];
-    [ArchiveUtilities archiveApprovedItems:checkHistory withKey:kCheckDataKey];
-    [ArchiveUtilities archiveApprovedItems:wireHistory withKey:kWireDataKey];
     
-    [self reloadHistoryTable];
-    
-    [self.refreshControl endRefreshing];
+    [[[AuthorizationService alloc] init] getAuthorizationHistoryAsync];
 }
 
 - (void) setDelegates{
@@ -150,14 +187,14 @@
 
 - (void) setHistorySearch{
     
-    _historySearch = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, 320, 45)];
-    _historySearch.barStyle=UIBarStyleBlackTranslucent;
-    _historySearch.showsCancelButton=NO;
-    _historySearch.autocorrectionType=UITextAutocorrectionTypeNo;
-    _historySearch.autocapitalizationType=UITextAutocapitalizationTypeNone;
-    _historySearch.delegate=self;
-    _historyTable.tableHeaderView=_historySearch;
-    
+    self.historySearch = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, 320, 45)];
+    self.historySearch.tintColor = BROWN_MENU_BACKGROUND_COLOR_FULL_ALPHA;
+    self.historySearch.barStyle=UIBarStyleBlackTranslucent;
+    self.historySearch.showsCancelButton=NO;
+    self.historySearch.autocorrectionType=UITextAutocorrectionTypeNo;
+    self.historySearch.autocapitalizationType=UITextAutocapitalizationTypeNone;
+    self.historySearch.delegate=self;
+    self.historyTable.tableHeaderView=_historySearch;
     
     UITextField *searchField = [_historySearch valueForKey:@"_searchField"];
     searchField.textColor = BROWN_TEXT_COLOR;
@@ -165,26 +202,62 @@
     _historySearch.text = @"Search Authorizations";
 }
 
+- (void) setGestureRecognizers{
+    
+    self.tapGesture = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(handleTapGesture:)];
+    
+    
+    self.tapGesture.cancelsTouchesInView = NO;
+    self.tapGesture.delegate = self;
+    
+    [self.view addGestureRecognizer:self.tapGesture];
+}
+
 - (void) setHistoryRefreshControl{
     
-    _refreshControl = [[UIRefreshControl alloc] init];
-    _refreshControl.tintColor = [UIColor colorWithRed:124.00/255.0 green:104.0/255.00 blue:76.0/255.00 alpha:1.0];
+    self.refreshControl           = [[UIRefreshControl alloc] init];
+    self.refreshControl.tintColor = [UIColor colorWithRed:124.00/255.0 green:104.0/255.00 blue:76.0/255.00 alpha:1.0];
     
     
     NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:@"Pull To Refresh"];
     [string addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:124.00/255.0 green:104.0/255.00 blue:76.0/255.00 alpha:1.0] range:NSMakeRange(0,15)];
     
     
-    _refreshControl.attributedTitle = string;
+    self.refreshControl.attributedTitle = string;
     
-    [_refreshControl addTarget:self action:@selector(handleRefresh) forControlEvents:UIControlEventValueChanged];
-    [self.historyTable addSubview:_refreshControl];
+    [self.refreshControl addTarget:self action:@selector(handleManualRefresh) forControlEvents:UIControlEventValueChanged];
+    [self.historyTable addSubview:self.refreshControl];
     
 }
 
-- (void) searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+- (void) displaySortingControl{
     
+    self.isSortingVisible           = YES;
+    self.sortingControl             = [[[NSBundle mainBundle] loadNibNamed:@"SortingViewController" owner:self options:nil] objectAtIndex:0];
+    self.sortingControl.view.alpha  = 0.0;
+    self.sortingControl.view.frame  = CGRectMake(60, 315, 250, 150);
     
+    [UIView animateWithDuration:0.400 animations:^{
+        
+        self.sortingControl.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.0];
+        self.sortingControl.view.alpha = 1.0;
+        
+        [self.view addSubview:self.sortingControl.view];
+        
+    }];
+}
+
+- (void) removeSortingControl{
+
+    self.isSortingVisible = NO;
+    
+    [UIView animateWithDuration:0.300 animations:^{
+        
+        self.sortingControl.view.alpha = 0.0;
+            
+    }];
 }
 
 - (void) searchBarSearchButtonClicked:(UISearchBar *)searchBar{
@@ -201,18 +274,21 @@
                         withObject: nil
                         afterDelay: 0.1];
         
-        _results = [ArchiveUtilities getAllHistoricalItems];
+        self.results = [ArchiveUtilities getAllHistoricalItems];
 
     }
     else{
         
-        _results = [SearchUtilities searchAllHistoricalItemsContainingText:searchText];
+        self.results = [SearchUtilities searchAllHistoricalItemsContainingText:searchText];
     }
     
-    [_historyTable reloadData];
+    [self.historyTable reloadData];
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    
+    [self removeSortingControl];
     
     ApprovalDetailBase *detail = [self.results objectAtIndex:indexPath.row];
     
@@ -226,9 +302,9 @@
 - (void) reloadHistoryTable{
     
     [self initializeHistoryData];
-    [_historyTable reloadData];
+    [self.historyTable reloadData];
     
-    if(_results.count > 0){
+    if(self.results.count > 0){
         
         [self enableHistoryControls:YES];
     }
@@ -238,6 +314,7 @@
     }
 }
 
+
 - (void) viewDidLoad{
     
     [super viewDidLoad];
@@ -245,15 +322,15 @@
     [self setDelegates];
     [self installToolBar];
     [self setDeleteButton];
+    [self setGestureRecognizers];
     [self setHistoryRefreshControl];
     [self setTableViewProperties];
     [self setHistorySearch];
     [self registerNotifications];
     
+    self.sortingControl.view.tag = 200;
     
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"HistoryRed.png"]];
-    _historySearch.tintColor = BROWN_MENU_BACKGROUND_COLOR_FULL_ALPHA;
-    
 }
 
 - (void) viewWillAppear:(BOOL)animated{
@@ -261,10 +338,91 @@
     [self reloadHistoryTable];
 }
 
-- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+
+- (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     
-    [self.historySearch resignFirstResponder];
+    NSLog(@"Class is: %@", NSStringFromClass([touch.view class]));
+    
+    if ([touch.view isKindOfClass:[UIButton class]]) {
+        
+        return NO;
+    }
+    
+    if ([touch.view isDescendantOfView:self.historyTable]) {
+        
+        if([self isSortingVisible]){
+            
+            [self removeSortingControl];
+            self.tapGesture.cancelsTouchesInView = YES;
+            return YES;
+        }
+        else if([self isKeyboardVisible]){
+            
+            [self.historySearch resignFirstResponder];
+            self.tapGesture.cancelsTouchesInView = YES;
+            return YES;
+        }
+        
+        self.tapGesture.cancelsTouchesInView = NO;
+        return YES;
+    }
+    else{
+        
+        self.tapGesture.cancelsTouchesInView = NO;
+    }
+    
+
+    return YES;
 }
+
+- (void) handleTapGesture:(UITapGestureRecognizer *) sender {
+    
+
+    if(self.isKeyboardVisible){
+        
+        [self.historySearch resignFirstResponder];
+    }
+}
+
+- (void) toolbar:(ALToolbar *)toolbar didSelectButtonAtIndex:(NSInteger)index{
+    
+    if(!self.isSortingVisible){
+        
+        [self displaySortingControl];
+    }
+    else{
+        
+        [self removeSortingControl];
+    }
+}
+
+- (void) installToolBar{
+    
+    _historyToolbar = [[ALToolbar alloc] initWithFrame:CGRectMake(0, 460, 320, 44)];
+    
+    [_historyToolbar setBackgroundImage:@"historyToolbar.png"];
+    [_historyToolbar setBackgroundColor:[UIColor clearColor]];
+    [_historyToolbar setBackgroundContentMode:UIViewContentModeBottom];
+    [_historyToolbar setDelegate:self];
+    [_historyToolbar setAnimatingDirection:ALToolbarAnimationDirectionBottom];
+    [_historyToolbar setLayoutMode:ALToolbarButtonsLayoutModeManual];
+    
+    self.sortToolbarItem =[[ALToolbarItem alloc]initWithFrame:CGRectMake(257, 8, 60, 30)];
+    [self.sortToolbarItem setImage:[UIImage imageNamed:@"SortBrown.png"] forState:UIControlStateNormal];
+    
+    [_historyToolbar setItems:[NSArray arrayWithObjects:self.sortToolbarItem, nil]];
+    
+    
+    [self.view addSubview:_historyToolbar];
+}
+
+- (void) enableHistoryControls:(BOOL) enabled{
+    
+    self.navigationItem.rightBarButtonItem.enabled = enabled;
+    self.sortToolbarItem.enabled                   = enabled;
+}
+
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     

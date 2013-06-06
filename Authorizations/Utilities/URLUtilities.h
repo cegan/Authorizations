@@ -13,15 +13,24 @@
 @interface URLUtilities : NSObject
 
 + (NSString *) getTokenURL;
++ (NSString *) getLoginURLForUser:(NSString *) user;
+
+
 + (NSString *) getResetUserDataURL;
 + (NSString *) getAchApprovalsURL;
 + (NSString *) getCheckApprovalsURL;
 + (NSString *) getWireApprovalsURL;
+
+
++ (NSString *) getAchHistoryURL;
++ (NSString *) getCheckHistoryURL;
++ (NSString *) getWireHistoryURL;
+
 + (NSString *) getAchApprovalURLForId:(NSString *) approvalId;
 + (NSString *) getCheckApprovalURLForId:(NSString *) approvalId;
 + (NSString *) getWireApprovalURLForId:(NSString *) approvalId;
 
-+ (NSString *) getLoginURLForUser:(NSString *) user;
+
 
 + (NSString *) getAchAuthorizationUrlWithData:(NSMutableArray *) data;
 + (NSString *) getCheckAuthorizationUrlWithData:(NSMutableArray *) data;

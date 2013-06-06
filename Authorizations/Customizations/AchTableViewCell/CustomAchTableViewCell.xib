@@ -171,7 +171,6 @@
 						</array>
 						<string key="NSFrameSize">{320, 67}</string>
 						<reference key="NSSuperview" ref="199799446"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:11</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>

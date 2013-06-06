@@ -185,7 +185,6 @@
     self.tableView.separatorColor       = BROWN_SEPERATOR_COLOR_HALF_ALPHA;
 }
 
-
 - (void) animateVisibleCells:(NSArray *)visibleCells forEditing:(BOOL) isEditing{
     
     for (CustomAchTableViewCell *cell in visibleCells) {

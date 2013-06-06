@@ -57,7 +57,7 @@
     
     
     [ArchiveUtilities archiveUserDeviceToken:deviceToken];
-}
+ }
 
 - (void) application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error{
     

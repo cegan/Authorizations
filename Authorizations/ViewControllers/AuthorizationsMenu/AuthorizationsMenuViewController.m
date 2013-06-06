@@ -197,7 +197,7 @@
             
             if(notification.pendingAchCount > 0){
                 
-                [cell addSubview:[AuthorizationUIUtilities getBadge:notification.pendingAchCount]];
+                [cell addSubview:[AuthorizationUIUtilities getBadgeImageWithCount:notification.pendingAchCount]];
             }
             break;
             
@@ -209,7 +209,7 @@
             
             if(notification.pendingCheckCount > 0){
                 
-                [cell addSubview:[AuthorizationUIUtilities getBadge:notification.pendingCheckCount]];
+                [cell addSubview:[AuthorizationUIUtilities getBadgeImageWithCount:notification.pendingCheckCount]];
             }
             break;
             
@@ -221,7 +221,7 @@
             
             if(notification.pendingWireCount > 0){
                 
-                [cell addSubview:[AuthorizationUIUtilities getBadge:notification.pendingWireCount]];
+                [cell addSubview:[AuthorizationUIUtilities getBadgeImageWithCount:notification.pendingWireCount]];
             }
             break;
             

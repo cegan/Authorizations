@@ -11,6 +11,8 @@
 @interface Enums : NSObject
 
 
+
+
 typedef enum  {
     
     kName               = 0,
@@ -65,6 +67,15 @@ typedef enum  {
     kLogoutMenuItem   = 5,
     
 } AuthorizationMenuItem;
+
+
+typedef enum  {
+    
+    kSortByCustomerName       = 0,
+    kSortByApprovalType       = 1,
+    kSortByApprovedOnDate     = 2,
+       
+} SortedBy;
 
 
 typedef enum  {

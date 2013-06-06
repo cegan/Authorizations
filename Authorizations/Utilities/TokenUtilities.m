@@ -40,7 +40,6 @@
         if ([currentDateTime compare:tokenExpirationDateTime] == NSOrderedDescending) {
             
             return YES;
-            
         }
         else{
             
@@ -49,20 +48,21 @@
     }
     
     return YES;
-    
 }
 
-+ (NSDate *) renewTokenExpiration{
++ (NSDate *) renewAccessTokenExpirationDateTime{
     
-    NSDate *mydate = [NSDate date];
-    NSTimeInterval secondsInHours = 1 * 60 * 60;
+    NSDate *mydate                = [NSDate date];
+    NSTimeInterval secondsInHours = 3500;
     
-    NSDate *dateOneHoursAhead = [mydate dateByAddingTimeInterval:secondsInHours];
+   return [mydate dateByAddingTimeInterval:secondsInHours];
     
-    return dateOneHoursAhead;
 }
 
 + (NSString *) getAuthorizationHeaderValue{
+    
+    
+    NSLog(@"token is: %@", [ArchiveUtilities unarchiveUsersApiGatewayAccessToken]);
     
     return [NSString stringWithFormat: @"%@%@", @"Bearer ", [ArchiveUtilities unarchiveUsersApiGatewayAccessToken]];
     

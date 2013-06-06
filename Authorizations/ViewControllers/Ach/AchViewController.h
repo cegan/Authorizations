@@ -8,21 +8,29 @@
 
 #import <UIKit/UIKit.h>
 #import "AuthorizationsBaseViewController.h"
-#import "PullToRefreshView.h"
 #import "ALToolbar.h"
 #import "Reachability.h"
 #import "CustomAchTableViewCell.h"
+#import "AchDetailViewController.h"
+#import "AchDetail.h"
+#import "StringUtilities.h"
+#import "NetworkUtilities.h"
+#import "NotificationUtilities.h"
+#import "AuthorizationUIUtilities.h"
+#import "ParsingUtilities.h"
+#import "BadgeUpdater.h"
+#import "AuthorizationService.h"
+#import "Constants.h"
+#import "Enums.h"
+#import "CustomColoredAccessory.h"
+#import "BlockActionSheet.h"
 
-@interface AchViewController : AuthorizationsBaseViewController <ALToolbarDelegate,UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate, PullToRefreshViewDelegate>{
+@interface AchViewController : AuthorizationsBaseViewController <ALToolbarDelegate,UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate>{
     
     Reachability* internetReachable;
     Reachability* hostReachable;
     
 }
-
-//- (void) approveSelectedItems:(NSMutableArray *) approvedItems;
-
-
 
 
 @end

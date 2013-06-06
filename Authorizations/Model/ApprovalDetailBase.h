@@ -13,7 +13,7 @@
 
 
 @property (nonatomic, copy) NSString *iD;
-
+@property (nonatomic, copy) NSString *type;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *accountNumber;
 @property (nonatomic, copy) NSString *originatingSystem;
@@ -23,8 +23,6 @@
 @property (nonatomic, copy) NSString *approvalLocationLatitude;
 @property (nonatomic, copy) NSString *approvalLocationLongitude;
 @property (nonatomic, retain) ContactInformation *contactInformation;
-
-
 
 @property (nonatomic, assign) BOOL isSelected;
 @property (nonatomic, assign) BOOL hasBeenViewed;

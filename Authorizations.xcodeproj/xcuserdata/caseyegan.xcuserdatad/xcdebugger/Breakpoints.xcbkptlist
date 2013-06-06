@@ -7,52 +7,39 @@
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Authorizations/AppDelegate.m"
-         timestampString = "388279871.230851"
+         filePath = "Authorizations/Services/AuthorizationService.m"
+         timestampString = "392227620.408576"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "419"
-         endingLineNumber = "419"
-         landmarkName = "-isUserLoggedIn"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "Authorizations/AppDelegate.m"
-         timestampString = "388279017.445698"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "69"
-         endingLineNumber = "69"
-         landmarkName = "-application:didFinishLaunchingWithOptions:"
+         startingLineNumber = "160"
+         endingLineNumber = "160"
+         landmarkName = "-getAchAuthorizationsAsyncWithCallBack:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Authorizations/ViewControllers/Settings/SettingsViewController.m"
-         timestampString = "388282715.759594"
+         filePath = "Authorizations/Services/AuthorizationService.m"
+         timestampString = "392228160.807015"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "30"
-         endingLineNumber = "30"
-         landmarkName = "-onRestButtonTouch:"
+         startingLineNumber = "61"
+         endingLineNumber = "61"
+         landmarkName = "-makeAsyncServiceRequestWithUrl:forHTTPMethod:withCallBack:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Authorizations/AppDelegate.m"
-         timestampString = "388282708.603713"
+         filePath = "Authorizations/Utilities/TokenUtilities.m"
+         timestampString = "392228167.042059"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "90"
-         endingLineNumber = "90"
-         landmarkName = "-application:didReceiveRemoteNotification:"
+         startingLineNumber = "65"
+         endingLineNumber = "65"
+         landmarkName = "+getAuthorizationHeaderValue"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

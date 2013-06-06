@@ -13,7 +13,9 @@
 #import "ALToolbar.h"
 #import "CheckDetail.h"
 #import "AuthorizationUIUtilities.h"
+#import "ParsingUtilities.h"
 #import "NetworkUtilities.h"
+#import "StringUtilities.h"
 #import "NotificationUtilities.h"
 #import "CheckDetailViewController.h"
 #import "AuthorizationService.h"
@@ -26,7 +28,7 @@
 @interface CheckViewController()
 
 - (void) setDelegates;
-- (void) setPullToRefresh;
+- (void) setRefreshControl;
 - (void) setNavigationTitle;
 - (void) registerNotifications;
 - (void) processApprovals:(NSMutableArray *) itemsToApprove;
@@ -44,7 +46,6 @@
 @synthesize tableView           = _tableView;
 @synthesize editButton          = _editButton;
 @synthesize cancelButton        = _cancelButton;
-@synthesize pullToRefresh       = _pullToRefresh;
 @synthesize isEditing           = _isEditing;
 @synthesize authorizationList   = _authorizationList;
 
@@ -79,11 +80,16 @@
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ChecksRed.png"]];
 }
 
-- (void) setPullToRefresh{
+- (void) setRefreshControl{
     
-    self.pullToRefresh = [[PullToRefreshView alloc] initWithScrollView:(UIScrollView *) self.tableView];
-    self.pullToRefresh.backgroundColor = [UIColor whiteColor];
-    [self.tableView addSubview:self.pullToRefresh];
+    self.refreshControl             = [[UIRefreshControl alloc] init];
+    self.refreshControl.tintColor   = [UIColor colorWithRed:124.00/255.0 green:104.0/255.00 blue:76.0/255.00 alpha:1.0];
+    
+    self.refreshControl.attributedTitle = [StringUtilities getRefreshControlAttributedStringWithValue:@"Pull To Refresh"];
+    
+    [self.refreshControl addTarget:self action:@selector(handleAchViewRefresh:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:self.refreshControl];
+    
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -127,7 +133,6 @@
 
 - (void) setDelegates{
     
-    self.pullToRefresh.delegate = self;
     self.tableView.delegate     = self;
     self.tableView.dataSource   = self;
     self.approvalToolbar.delegate = self;
@@ -140,6 +145,22 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveUpdateNotification:) name:@"didReceiveUpdateNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveNewAuthorizationNotification:) name:@"didReceiveNewAuthorizationNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveAuthorizationReceiptNotification:) name:@"didReceiveAuthorizationReceiptNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didFinishRefreshingChecks:) name:@"didFinishRefreshingChecks" object:nil];
+}
+
+- (void) didFinishRefreshingChecks:(NSNotification *)notification{
+    
+    NSData *response = [[notification userInfo] valueForKey:@"didFinishRefreshingChecks"];
+    
+    self.authorizationList = [ParsingUtilities parseCheckAuthorizationResults:response];
+    
+    [self.tableView reloadData];
+    
+    
+    [NotificationUtilities sendDataRefreshNotification:kNewIncomingCheckAuthorization andCount:self.authorizationList.count];
+    
+    
+    [self.refreshControl endRefreshing];
 }
 
 - (void) didReceiveDeleteNotification:(NSNotification *)notification{
@@ -263,19 +284,9 @@
 
 - (void) retrieveCheckData{
     
-    ServiceResponse *serviceResponse = [[[AuthorizationService alloc] init] getCheckAuthorizations];
-    
-    
-    if(serviceResponse.wasSuccessful){
-        
-        self.authorizationList = serviceResponse.responseData;
-        [NotificationUtilities sendDataRefreshNotification:kNewIncomingCheckAuthorization andCount:self.authorizationList.count];
-    }
-    else{
-        
-        //display error?
-    }
+    [[[AuthorizationService alloc] init] getCheckAuthorizationsAsyncWithCallBack:@"didFinishRefreshingChecks"];
 }
+
 
 - (void) checkApprovalRequested:(NSNotification *)notification{
     
@@ -284,14 +295,12 @@
         if(![NetworkUtilities isRemoteHostReachable]){
             
             [AuthorizationUIUtilities showModalNetworkError:kAuthorizationServiceNotReachable InView:self.view];
-            [self.pullToRefresh finishedLoading];
             return;
         }
     }
     else{
         
         [AuthorizationUIUtilities showModalNetworkError:kNoInternetConnection InView:self.view];
-        [self.pullToRefresh finishedLoading];
         return;
     }
     
@@ -301,40 +310,19 @@
     [self processApprovals:item];
 }
 
-- (void) pullToRefreshViewShouldRefresh:(PullToRefreshView *)view;{
+- (void) handleAchViewRefresh:(UIRefreshControl *)sender{
+    
     
     if([NetworkUtilities hasConnection]){
         
-        if(![NetworkUtilities isRemoteHostReachable]){
-            
-            [AuthorizationUIUtilities showModalNetworkError:kAuthorizationServiceNotReachable InView:self.view];
-            [self.pullToRefresh finishedLoading];
-            return;
-        }
+        self.refreshControl.attributedTitle = [StringUtilities getRefreshControlAttributedStringWithValue:@"Refreshing Checks"];
+        [self retrieveCheckData];
     }
     else{
         
         [AuthorizationUIUtilities showModalNetworkError:kNoInternetConnection InView:self.view];
-        [self.pullToRefresh finishedLoading];
         return;
     }
-    
-    
-    [self reloadTableData];
-    
-}
-
-- (void) reloadTableData{
-    
-    [self retrieveCheckData];
-    [self.tableView reloadData];
-    [self.pullToRefresh finishedLoading];
-    
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"didReceiveManualRefreshtNotification"
-                                                        object:nil
-                                                      userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%i", self.authorizationList.count] forKey:@"count"]];
-    
     
 }
 
@@ -342,8 +330,8 @@
     
     [super viewDidLoad];
     
-    [self setPullToRefresh];
     [self setNavigationTitle];
+    [self setRefreshControl];
     [self setTableViewProperties];
     [self registerNotifications];
     [self setDelegates];
@@ -358,8 +346,15 @@
 
 - (void) viewWillAppear:(BOOL)animated {
     
+    if(!self.authorizationList){
+        
+        [self retrieveCheckData];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
     
-    
+    [self endTableViewEdit];
 }
 
 - (void) approveSelectedItems:(NSMutableArray *) itemsToApprove{

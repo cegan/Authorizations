@@ -8,7 +8,22 @@
 
 #import "URLUtilities.h"
 
+
+
 @implementation URLUtilities
+
+
++ (NSString *) getTokenURL{
+    
+    return [NSString stringWithFormat: @"%@%@", kHostAddress, @"token"];
+}
++ (NSString *) getLoginURLForUser:(NSString *) user{
+    
+    return [NSString stringWithFormat: @"%@%@%@%@%@%@%@", kHostAddress,  @"LoginUser?userId=",
+            user, @"&password=", @"", @"&deviceToken=", [ArchiveUtilities unarchiveUserDeviceToken]];
+    
+}
+
 
 + (NSString *) getAchApprovalsURL{
     
@@ -25,6 +40,21 @@
     
    return [NSString stringWithFormat: @"%@%@%@", kHostAddress,  @"GetWireApprovals/", [ArchiveUtilities getloggedinUser]];
 
+}
+
++ (NSString *) getAchHistoryURL{
+    
+    return [NSString stringWithFormat: @"%@%@%@", kHostAddress,  @"GetAchAuthorizationHistory/", [ArchiveUtilities getloggedinUser]];
+}
+
++ (NSString *) getCheckHistoryURL{
+    
+    return [NSString stringWithFormat: @"%@%@%@", kHostAddress,  @"GetCheckAuthorizationHistory/", [ArchiveUtilities getloggedinUser]];
+}
+
++ (NSString *) getWireHistoryURL{
+    
+    return [NSString stringWithFormat: @"%@%@%@", kHostAddress,  @"GetWireAuthorizationHistory/", [ArchiveUtilities getloggedinUser]];
 }
 
 + (NSString *) getAchApprovalURLForId:(NSString *) approvalId{
@@ -62,18 +92,6 @@
     return [NSString stringWithFormat: @"%@%@%@%@%@", kHostAddress,  @"AuthorizeWiresAsync?wiresToApprove=",
             [self getAuthorizationIds:data], @"&deviceId=", [ArchiveUtilities unarchiveUserDeviceToken]];
     
-}
-
-+ (NSString *) getLoginURLForUser:(NSString *) user{
-    
-    return [NSString stringWithFormat: @"%@%@%@%@%@%@%@", kHostAddress,  @"LoginUser?userId=",
-            user, @"&password=", @"", @"&deviceToken=", [ArchiveUtilities unarchiveUserDeviceToken]];
-    
-}
-
-+ (NSString *) getTokenURL{
-    
-    return [NSString stringWithFormat: @"%@%@", kHostAddress, @"token"];
 }
 
 + (NSString *) getResetUserDataURL{

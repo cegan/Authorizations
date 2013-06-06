@@ -15,6 +15,7 @@
 #import "CustomColoredAccessory.h"
 #import "Constants.h"
 #import "Enums.h"
+#import "BlockActionSheet.h"
 
 @interface WireDetailViewController ()
 
@@ -48,10 +49,16 @@
 
 - (IBAction) showActionSheet:(id)sender {
     
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Approve Wire" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Approve" otherButtonTitles:nil, nil];
     
-    actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-    [actionSheet showInView:self.navigationController.view];
+    BlockActionSheet *sheet = [BlockActionSheet sheetWithTitle:@"Approve Wire"];
+    
+    [sheet addButtonWithTitle:@"Approve" atIndex:0 block:^{
+        
+        [self sendApprovalRequest:_detail];
+    }];
+    
+    [sheet setDestructiveButtonWithTitle:@"Cancel" block:nil];
+    [sheet showInView:self.view];
     
 }
 
@@ -82,19 +89,6 @@
     _wireDetailsTableView.backgroundColor       = [UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewBackgroundBrown.png"]];
     _wireDetailsTableView.separatorColor        = BROWN_TEXT_COLOR;
     _wireDetailsTableView.separatorStyle        = UITableViewCellSeparatorStyleSingleLine;
-}
-
-- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
-    if (buttonIndex == 0) {
-        
-        [self approveSelectedItem:_detail];
-        
-    }  
-    else {
-        
-        [actionSheet dismissWithClickedButtonIndex:1 animated:YES];
-    }
 }
 
 - (void) sendApprovalRequest:(ApprovalDetailBase *) detail{

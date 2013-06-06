@@ -15,4 +15,9 @@
 + (NSString *) getTimeFromDate:(NSDate *) date;
 + (NSString *) getCurrentDateTime;
 + (NSString *) getLongDateFormatForDate:(NSDate *) date;
+
+
++ (int) getHourFromDate:(NSDate *) date;
++ (int) getMinuteFromDate:(NSDate *) date;
+
 @end

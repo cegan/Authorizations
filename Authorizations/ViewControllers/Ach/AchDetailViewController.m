@@ -18,7 +18,7 @@
 #import "CustomColoredAccessory.h"
 #import "Enums.h"
 #import "BlockActionSheet.h"
-
+ 
 
 
 @interface AchDetailViewController()
@@ -75,7 +75,8 @@
 
 - (void) setBackgroundForRootView{
     
-    UIImageView *backgroundImage = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"DetailViewBackground.png"]];
+    //UIImageView *backgroundImage = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"DetailViewBackground.png"]];
+    UIImageView *backgroundImage = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"TableViewBackgroundBrown.png"]];
     backgroundImage.backgroundColor = [UIColor clearColor];
     [self.view addSubview:backgroundImage];
     [self.view bringSubviewToFront:_detailsTableView];

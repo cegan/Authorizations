@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PullToRefreshView.h"
 #import "ALToolbar.h"
 #import "Reachability.h"
 #import "ArchiveUtilities.h"
@@ -20,7 +19,6 @@
 @property (weak, nonatomic) UIBarButtonItem *cancelButton;
 @property (weak, nonatomic) UIBarButtonItem *editButton;
 @property (nonatomic,retain) ALToolbar *approvalToolbar;
-@property (strong, nonatomic) PullToRefreshView *pullToRefresh;
 @property (nonatomic, assign) BOOL isEditing;
 
 @property (nonatomic, retain) NSMutableArray *authorizationList;

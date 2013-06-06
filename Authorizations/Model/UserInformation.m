@@ -17,8 +17,6 @@
 @synthesize title           = _title;
 @synthesize deviceToken     = _deviceToken;
 
-
-
 - (void) encodeWithCoder:(NSCoder *)aCoder{
     
     [aCoder encodeObject:_networkId forKey:@"networkId"];
@@ -40,7 +38,6 @@
         _nameLast       = [aDecoder decodeObjectForKey:@"nameLast"];
         _title          = [aDecoder decodeObjectForKey:@"title"];
         _deviceToken    = [aDecoder decodeObjectForKey:@"deviceToken"];
-       
 	}
     
 	return self;

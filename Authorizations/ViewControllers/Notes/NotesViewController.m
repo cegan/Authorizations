@@ -99,7 +99,7 @@
 - (void) textFieldDidBeginEditing:(UITextField *)textField{
     
     
-    
+    NSString *t;
 }
 
 - (void) textFieldDidEndEditing:(UITextField *)textField{
@@ -111,6 +111,7 @@
 - (void) viewDidLoad{
     
     [self installUserInterface];
+    [self setDelegates];
     [super viewDidLoad];
 }
 

@@ -12,6 +12,7 @@
 @implementation AchDetail
 
 @synthesize iD                  = _iD;
+@synthesize type                = _type;
 @synthesize name                = _name;
 @synthesize accountNumber       = _additionalDetail;
 @synthesize originatingSystem   = _originatingSystem;
@@ -35,6 +36,7 @@
 - (void) encodeWithCoder:(NSCoder *)aCoder{
     
     [aCoder encodeObject:_iD forKey:@"iDKey"];
+    [aCoder encodeObject:@"Ach" forKey:@"objectTypeKey"];
     [aCoder encodeObject:_name forKey:@"nameKey"];
 	[aCoder encodeObject:_additionalDetail forKey:@"additionalDetailKey"];
     [aCoder encodeObject:_originatingSystem forKey:@"originatingSystemKey"];
@@ -55,6 +57,7 @@
     if (self = [super init]){
         
         _iD                 = [aDecoder decodeObjectForKey:@"iDKey"];
+        _type               = [aDecoder decodeObjectForKey:@"objectTypeKey"];
         _name               = [aDecoder decodeObjectForKey:@"nameKey"];
 		_additionalDetail   = [aDecoder decodeObjectForKey:@"additionalDetailKey"];
         _originatingSystem  = [aDecoder decodeObjectForKey:@"originatingSystemKey"];

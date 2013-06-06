@@ -7,22 +7,7 @@
 //
 
 
-#import "ArchiveUtilities.h"
 #import "AchViewController.h"
-#import "AchDetailViewController.h"
-#import "CustomAchTableViewCell.h"
-#import "AchDetail.h"
-#import "StringUtilities.h"
-#import "NetworkUtilities.h"
-#import "NotificationUtilities.h"
-#import "AuthorizationUIUtilities.h"
-#import "BadgeUpdater.h"
-#import "AuthorizationService.h"
-#import "Constants.h"
-#import "Enums.h"
-#import "BadgeUpdater.h"
-#import "CustomColoredAccessory.h"
-#import "BlockActionSheet.h"
 
 
 @interface AchViewController()
@@ -47,7 +32,6 @@
 @synthesize refreshControl      = _refreshControl;
 @synthesize editButton          = _editButton;
 @synthesize cancelButton        = _cancelButton;
-@synthesize pullToRefresh       = _pullToRefresh;
 @synthesize isEditing           = _isEditing;
 @synthesize authorizationList   = _authorizationList;
 
@@ -83,11 +67,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveUpdateNotification:) name:@"didReceiveUpdateNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveNewAuthorizationNotification:) name:@"didReceiveNewAuthorizationNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveAuthorizationReceiptNotification:) name:@"didReceiveAuthorizationReceiptNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didFinishRefreshingAchs:) name:@"didFinishRefreshingAchs" object:nil];
 }
 
 - (void) setDelegates{
     
-    self.pullToRefresh.delegate = self;
     self.tableView.delegate     = self;
     self.tableView.dataSource   = self;
     self.approvalToolbar.delegate = self;
@@ -106,7 +90,7 @@
 
     self.refreshControl.attributedTitle = [StringUtilities getRefreshControlAttributedStringWithValue:@"Pull To Refresh"];
     
-    [_refreshControl addTarget:self action:@selector(handleAchViewRefresh) forControlEvents:UIControlEventValueChanged];
+    [_refreshControl addTarget:self action:@selector(handleAchViewRefresh:) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:self.refreshControl];
     
 }
@@ -117,6 +101,22 @@
         
         [AuthorizationUIUtilities showLocalNotification:@"There are remaining ACH's that still need to be approved" messageAction:@"Pending Ach's"];
     }
+}
+
+- (void) didFinishRefreshingAchs:(NSNotification *)notification{
+    
+    NSData *response = [[notification userInfo] valueForKey:@"didFinishRefreshingAchs"];
+    
+    self.authorizationList = [ParsingUtilities parseAchAuthorizationResults:response];
+    
+    [self.tableView reloadData];
+    
+
+    [NotificationUtilities sendDataRefreshNotification:kNewIncomingAchAuthorization andCount:self.authorizationList.count];
+    
+    
+    [self.refreshControl endRefreshing];
+    self.refreshControl.attributedTitle = [StringUtilities getRefreshControlAttributedStringWithValue:@"Pull To Refresh"];
 }
 
 - (void) didReceiveDeleteNotification:(NSNotification *)notification{
@@ -236,85 +236,70 @@
 
 - (void) retrieveAchData{
     
-    ServiceResponse *serviceResponse = [[[AuthorizationService alloc] init] getAchAuthorizations];
-
-    if(serviceResponse.wasSuccessful){
-        
-        self.authorizationList = serviceResponse.responseData;
-        [NotificationUtilities sendDataRefreshNotification:kNewIncomingAchAuthorization andCount:self.authorizationList.count];
-    }   
-    else{
-        
-        //display error?
-    }
+    [[[AuthorizationService alloc] init] getAchAuthorizationsAsyncWithCallBack:@"didFinishRefreshingAchs"];
 }
 
 - (void) achApprovalRequested:(NSNotification *)notification{
     
+
     if([NetworkUtilities hasConnection]){
         
-        if(![NetworkUtilities isRemoteHostReachable]){
-            
-            [AuthorizationUIUtilities showModalNetworkError:kAuthorizationServiceNotReachable InView:self.view];
-            [self.pullToRefresh finishedLoading];
-            return;
-        }
+        NSMutableArray *item = [[NSMutableArray alloc] initWithObjects:(AchDetail *)[[notification userInfo] valueForKey:@"detail"], nil];
+        [self processApprovals:item];
     }
     else{
         
         [AuthorizationUIUtilities showModalNetworkError:kNoInternetConnection InView:self.view];
-        [self.pullToRefresh finishedLoading];
         return;
-    }
-    
-    NSMutableArray *item = [[NSMutableArray alloc] initWithObjects:(AchDetail *)[[notification userInfo] valueForKey:@"detail"], nil];
-    
-    [self processApprovals:item];
+    }    
 }
 
-- (void) handleAchViewRefresh{
+- (void) handleAchViewRefresh:(UIRefreshControl *)sender{
+    
     
     if([NetworkUtilities hasConnection]){
         
-        if(![NetworkUtilities isRemoteHostReachable]){
-            
-            [AuthorizationUIUtilities showModalNetworkError:kAuthorizationServiceNotReachable InView:self.view];
-            [self.pullToRefresh finishedLoading];
-            return;
-        }
+        self.refreshControl.attributedTitle = [StringUtilities getRefreshControlAttributedStringWithValue:@"Refreshing Ach's"];
+        [self reloadTableData];
     }
     else{
         
         [AuthorizationUIUtilities showModalNetworkError:kNoInternetConnection InView:self.view];
-        [self.pullToRefresh finishedLoading];
+        [self.refreshControl endRefreshing];
         return;
     }
-    
-    [self reloadTableData];
+
 }
 
 - (void) reloadTableData{
     
-    self.refreshControl.attributedTitle = [StringUtilities getRefreshControlAttributedStringWithValue:@"Refreshing Ach's"];
-    
     [self retrieveAchData];
-    [self.tableView reloadData];
-    [self.refreshControl endRefreshing];
-    
-    self.refreshControl.attributedTitle = [StringUtilities getRefreshControlAttributedStringWithValue:@"Pull To Refresh"];
  }
 
 - (void) viewDidLoad{
     
     [super viewDidLoad];
-        
+    
+    [self setDelegates];
     [self setRefreshControl];
     [self setNavigationTitle];
     [self setTableViewProperties];
     [self registerNotifications];
-    [self setDelegates];
-    //[self setupGestureRecognizers];
-    [self retrieveAchData];
+    
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    
+    if(!self.authorizationList){
+        
+        NSData *responseData   = [[[AuthorizationService alloc] init] getAchAuthorizationsAsAsync:NO withCallBack:nil];
+        self.authorizationList = [ParsingUtilities parseAchAuthorizationResults:responseData];
+    }
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
+    
+    [self endTableViewEdit];
 }
 
 - (void) viewDidUnload {
@@ -323,18 +308,12 @@
     [super viewDidUnload];
 }
 
-- (void) willPresentActionSheet:(UIActionSheet *)actionSheet {
-    
-    //[[actionSheet layer] setBackgroundColor:[UIColor colorWithRed:229.00/255.0 green:217.0/255.00 blue:191.0/255.00 alpha:1].CGColor];
-    //UIImageView *df = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TableViewBackgroundBrown.png"]];
-    //[actionSheet addSubview:df];
-}
+
 
 - (void) approveSelectedItems:(NSMutableArray *) itemsToApprove{
     
     [[[AuthorizationService alloc] init] authorizeAch:itemsToApprove AsAsync:YES];
 }
-
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     

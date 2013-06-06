@@ -10,10 +10,17 @@
 #import "AuthorizationUIUtilities.h"
 #import "CalendarUtilities.h"
 #import "ApprovalDetailBase.h"
+#import "AchDetail.h"
+#import "CheckDetail.h"
+#import "WireDetail.h"
 #import "Constants.h"
 
-@implementation AuthorizationUIUtilities
 
+#define kTimeStampFramePosX     15.0
+#define kTimeStampFramePosY     5.0
+#define kTimeStampFrameHeight   17.5
+
+@implementation AuthorizationUIUtilities
 
 
 + (UIButton *) getAuthorizationsDoneButton{
@@ -34,41 +41,38 @@
     return button;
 }
 
-+ (UIImageView *) getBadge:(NSInteger *) withBadgeNumber{
-    
-    int myInt = withBadgeNumber;
-    NSUInteger *charCount = [[NSString stringWithFormat:@"%i", myInt] length];
-    
-    UIImageView *timeStamp = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"testBadge.png"]];
-   // timeStamp.frame = CGRectMake(200, 7, 42, 25);
-    
-    timeStamp.frame = CGRectMake(200, 7, 45, 27);
-    
-    UILabel *dateTimeLabel = [[UILabel alloc] init];
+
+
++ (UIImageView *) getBadgeImageWithCount:(NSInteger *) count{
     
 
-    if(charCount == 1){
-        
-        dateTimeLabel.frame = CGRectMake(18, 8, 25, 12);
-        
-    }
-    else if(charCount == 2){
-        
-        dateTimeLabel.frame             = CGRectMake(14, 8, 25, 12);
-        
-    }
-    else if(charCount == 3){
-        
-        dateTimeLabel.frame             = CGRectMake(10, 8, 25, 12);
+    NSUInteger *charCount  = [[NSString stringWithFormat:@"%i", (int)count] length];
+    UIImageView *timeStamp = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"testBadge.png"]];
+    UILabel *dateTimeLabel = [[UILabel alloc] init];
+   
+    timeStamp.frame = CGRectMake(200, 7, 45, 27);
+    
+    switch ((int)charCount) {
+        case 1:
+            dateTimeLabel.frame = CGRectMake(18, 8, 25, 12);
+            break;
+            
+        case 2:
+            dateTimeLabel.frame = CGRectMake(14, 8, 25, 12);
+            break;
+            
+        case 3:
+            dateTimeLabel.frame = CGRectMake(10, 8, 25, 12);
+            break;
+            
+        default:
+            break;
     }
     
     dateTimeLabel.backgroundColor   = [UIColor clearColor];
-  //  dateTimeLabel.textColor         = RED_TEXT_COLOR;
-    
     dateTimeLabel.textColor         = [UIColor whiteColor];
-    dateTimeLabel.text              = [NSString stringWithFormat:@"%i", myInt];
-    
-    [dateTimeLabel setFont:[[UIFont fontWithName:@"HelveticaNeue-Bold" size:14] init]];
+    dateTimeLabel.text              = [NSString stringWithFormat:@"%i", (int)count];
+    dateTimeLabel.font              = [[UIFont fontWithName:@"HelveticaNeue-Bold" size:14] init];
     
     [timeStamp addSubview:dateTimeLabel];
     
@@ -76,32 +80,94 @@
     
 }
 
-+ (UIImageView *) getApprovalDateTimeStampForDate:(NSString *) approvalDate{
++ (UIImageView *) getApprovalTypeStampWithText:(NSString *) text atPosition:(int) position{
     
-       
-    UIImageView *timeStamp = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"historyTimestamp.png"]];
-    UILabel *dateTimeLabel = [[UILabel alloc] init];
+    UILabel *label           = [[UILabel alloc] initWithFrame:CGRectMake(4, 4, 65, 10)];
+    UIImageView *typeStamp   = [[UIImageView alloc] init];
+   
+    label.text                      = text;
+    label.backgroundColor           = [UIColor clearColor];
+    label.textColor                 = RED_TEXT_COLOR;
+    label.font                      = [[UIFont fontWithName:@"HelveticaNeue-Bold" size:10] init];
     
-    timeStamp.frame                 = CGRectMake(17, 5, 82, 17);
+    
+    if([text isEqualToString:@"Ach"]){
+        
+        typeStamp.frame = CGRectMake((position + 20), 5, 27, 17.5);
+        
+    }
+    else if([text isEqualToString:@"Check"]){
+        
+        typeStamp.frame = CGRectMake((position + 20), 5, 39, 17.5);
+        
+    }
+    else if([text isEqualToString:@"Wire"]){
+        
+        typeStamp.frame = CGRectMake((position + 20), 5, 30, 17.5);
+        
+    }
+    
+    typeStamp.tag                   = 200;
+    typeStamp.image                 = [UIImage imageNamed:@"arrivalTimeStamp3.png"];
+    typeStamp.layer.borderColor     = BROWN_BORDER_COLOR;
+    typeStamp.layer.borderWidth     = kBorderWidth;
+    typeStamp.layer.cornerRadius    = kTimeStampCornerRadius;
+    
+    [typeStamp addSubview:label];
+    
+    return typeStamp;
+}
+
++ (UIImageView *) getApprovalDateTimeStampForDate:(NSDate *) approvalDate{
+    
+   
+    int days    = [CalendarUtilities daysBetweenDate:approvalDate andDate:[[NSDate alloc] init]];
+    int hours   = [CalendarUtilities getHourFromDate:approvalDate];
+    
+    UIImageView *timeStamp          = [[UIImageView alloc] init];
+    UILabel *label                  = [[UILabel alloc] initWithFrame:CGRectMake(4, 4, 65, 10)];
+    label.backgroundColor           = [UIColor clearColor];
+    label.textColor                 = RED_TEXT_COLOR;
+    label.font                      = [[UIFont fontWithName:@"HelveticaNeue-Bold" size:10] init];
+    
+    timeStamp.tag                   = 100;
+    timeStamp.image                 = [UIImage imageNamed:@"arrivalTimeStamp3.png"];
     timeStamp.layer.borderColor     = BROWN_BORDER_COLOR;
     timeStamp.layer.borderWidth     = kBorderWidth;
     timeStamp.layer.cornerRadius    = kTimeStampCornerRadius;
     
-    dateTimeLabel.backgroundColor   = [UIColor clearColor];
-    dateTimeLabel.frame             = CGRectMake(15, 4, 82, 10);
-    dateTimeLabel.textColor         = GREEN_TEXT_COLOR;
-    dateTimeLabel.text              = approvalDate;
     
-    [dateTimeLabel setFont:[[UIFont fontWithName:@"HelveticaNeue-Bold" size:10] init]];
-
-    [timeStamp addSubview:dateTimeLabel];
+    if(days == 0){
+        
+        if(hours < 10){
+            
+            timeStamp.frame = CGRectMake(kTimeStampFramePosX, kTimeStampFramePosY, 45, kTimeStampFrameHeight);
+        }
+        else{
+            
+            timeStamp.frame = CGRectMake(kTimeStampFramePosX, kTimeStampFramePosY, 52, kTimeStampFrameHeight);
+        }
+        label.text = [CalendarUtilities getTimeFromDate:approvalDate];
+    }
+    else if(days == 1){
+        
+        timeStamp.frame = CGRectMake(kTimeStampFramePosX, kTimeStampFramePosY, 57, kTimeStampFrameHeight);
+        label.text      = [[[NSNumber numberWithInt:days] stringValue] stringByAppendingString:@" Day Ago"];
+    }
+    else{
+        
+        timeStamp.frame  = CGRectMake(kTimeStampFramePosX, kTimeStampFramePosY, 63, kTimeStampFrameHeight);
+        label.text       = [[[NSNumber numberWithInt:days] stringValue] stringByAppendingString:@" Days Ago"];
+        
+    }
+    
+    [timeStamp addSubview:label];
     
     return timeStamp;
     
 }
 
 + (UIImageView *) getArrivalStampForDate:(NSDate *) date{
-    
     
     int days = [CalendarUtilities daysBetweenDate:date andDate:[[NSDate alloc] init]];
     
@@ -120,57 +186,53 @@
     timeStamp.layer.borderWidth     = kBorderWidth;
     timeStamp.layer.cornerRadius    = kTimeStampCornerRadius;
     
+    
     if(days == 0){
         
         timeStamp.frame             = CGRectMake(33, 6, 50, 17.5);
         label.text                  = [CalendarUtilities getTimeFromDate:date];
     }
-    else if (days == 1){
+    else if(days == 1){
         
         timeStamp.frame             = CGRectMake(33, 5, 57, 17.5);
         label.text                  = [[[NSNumber numberWithInt:days] stringValue] stringByAppendingString:@" Day Ago"];
     }
-    
     else{
         
         timeStamp.frame             = CGRectMake(33, 5, 63, 17.5);
         label.text                  = [[[NSNumber numberWithInt:days] stringValue] stringByAppendingString:@" Days Ago"];
     }
-    
+        
     [timeStamp addSubview:label];
     
     return timeStamp;
 }
 
-
-+ (void) updateApproveButton:(UIButton *) button withTotalNumberOfSelectedItems:(int) totalItems{
++ (NSString *) getLabelForAuthorizationType:(ApprovalDetailBase *) type{
     
+    NSString *typeLabel;
     
-    for(UIView *subview in [button subviews]) {
+    if([type isKindOfClass:[AchDetail class]]){
         
-        if([subview isKindOfClass:[UILabel class]]) {
-            
-            UILabel *label = (UILabel*)subview;
-            
-            int totalSelectedAchs = totalItems;
-            
-            if(totalSelectedAchs <= 0){
-                
-                button.enabled  = NO;
-                label.alpha     = 0.5;
-                label.frame     = CGRectMake(14, 9, 75, 15);
-                label.text      = @"Approve";
-            }
-            else{
-                
-                NSString *value = [@"Approve(" stringByAppendingString:[[NSNumber numberWithInt:totalSelectedAchs] stringValue]];
-                label.alpha     = 1.0;
-                label.frame     = CGRectMake(6, 9, 75, 15);
-                label.text      = [value stringByAppendingString:@")"];
-            }
-        }
+        typeLabel = @"Ach";
+        
     }
+    else if([type isKindOfClass:[CheckDetail class]]){
+        
+        typeLabel = @"Check";
+        
+    }
+    
+    else if([type isKindOfClass:[WireDetail class]]){
+        
+        typeLabel = @"Wire";
+        
+    }
+    
+    return typeLabel;
 }
+
+
 
 + (void) showModalNetworkError:(NSInteger *) errorType InView:(UIView *) view{
     
@@ -307,9 +369,6 @@
     [[UIApplication sharedApplication] scheduleLocalNotification:notif];
     
 }
-
-
-
 
 + (void) setRecursiveUserInteraction:(UIView *) view userInteractionEnabled:(BOOL) enabled{
     

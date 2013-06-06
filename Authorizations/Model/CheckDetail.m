@@ -10,27 +10,29 @@
 
 @implementation CheckDetail
 
-@synthesize iD                  = _iD;
-@synthesize name                = _name;
-@synthesize accountNumber       = _additionalDetail;
-@synthesize originatingSystem   = _originatingSystem;
-@synthesize userNotes           = _userNotes;
-@synthesize amount              = _amount;
-@synthesize arrivalTime         = _arrivalTime;
-@synthesize approvedOnDate      = _approvedOnDate;
-@synthesize arrivalDate         = _arrivalDate;
-@synthesize hasBeenViewed       = _hasBeenViewed;
-@synthesize isSelected          = _isSelected;
-@synthesize isApproved          = _isApproved;
-@synthesize isPendingApproval   = _isPendingApproval;
-@synthesize approvalLocationLatitude = _approvalLocationLatitude;
-@synthesize approvalLocationLongitude = _approvalLocationLongitude;
-@synthesize contactInformation = _contactInformation;
+@synthesize iD                          = _iD;
+@synthesize type                        = _type;
+@synthesize name                        = _name;
+@synthesize accountNumber               = _additionalDetail;
+@synthesize originatingSystem           = _originatingSystem;
+@synthesize userNotes                   = _userNotes;
+@synthesize amount                      = _amount;
+@synthesize arrivalTime                 = _arrivalTime;
+@synthesize approvedOnDate              = _approvedOnDate;
+@synthesize arrivalDate                 = _arrivalDate;
+@synthesize hasBeenViewed               = _hasBeenViewed;
+@synthesize isSelected                  = _isSelected;
+@synthesize isApproved                  = _isApproved;
+@synthesize isPendingApproval           = _isPendingApproval;
+@synthesize approvalLocationLatitude    = _approvalLocationLatitude;
+@synthesize approvalLocationLongitude   = _approvalLocationLongitude;
+@synthesize contactInformation          = _contactInformation;
 
 
 - (void) encodeWithCoder:(NSCoder *)aCoder{
     
     [aCoder encodeObject:_iD forKey:@"iDKey"];
+    [aCoder encodeObject:@"Check" forKey:@"objectTypeKey"];
     [aCoder encodeObject:_name forKey:@"nameKey"];
 	[aCoder encodeObject:_additionalDetail forKey:@"additionalDetailKey"];
     [aCoder encodeObject:_originatingSystem forKey:@"originatingSystemKey"];
@@ -52,20 +54,21 @@
     
     if (self = [super init]){
         
-        _iD                 = [aDecoder decodeObjectForKey:@"iDKey"];
-        _name               = [aDecoder decodeObjectForKey:@"nameKey"];
-		_additionalDetail   = [aDecoder decodeObjectForKey:@"additionalDetailKey"];
-        _originatingSystem  = [aDecoder decodeObjectForKey:@"originatingSystemKey"];
-        _userNotes          = [aDecoder decodeObjectForKey:@"userNotesKey"];
-        _amount             = [aDecoder decodeDoubleForKey:@"amountKey"];
-        _arrivalTime        = [aDecoder decodeObjectForKey:@"achArrivalTimeKey"];
-        _approvedOnDate     = [aDecoder decodeObjectForKey:@"achApprovedOnDateKey"];
-        _isSelected         = [aDecoder decodeBoolForKey:@"isSelectedKey"];
-        _hasBeenViewed      = [aDecoder decodeBoolForKey:@"hasBeenViewed"];
-        _isApproved         = [aDecoder decodeBoolForKey:@"isApprovedKey"];
-        _approvalLocationLatitude = [aDecoder decodeObjectForKey:@"approvalLocationLatitudeKey"];
-        _approvalLocationLongitude = [aDecoder decodeObjectForKey:@"approvalLocationLongitudeKey"];
-        _contactInformation = [aDecoder decodeObjectForKey:@"contactInformationKey"];
+        _iD                             = [aDecoder decodeObjectForKey:@"iDKey"];
+        _type                           = [aDecoder decodeObjectForKey:@"objectTypeKey"];
+        _name                           = [aDecoder decodeObjectForKey:@"nameKey"];
+		_additionalDetail               = [aDecoder decodeObjectForKey:@"additionalDetailKey"];
+        _originatingSystem              = [aDecoder decodeObjectForKey:@"originatingSystemKey"];
+        _userNotes                      = [aDecoder decodeObjectForKey:@"userNotesKey"];
+        _amount                         = [aDecoder decodeDoubleForKey:@"amountKey"];
+        _arrivalTime                    = [aDecoder decodeObjectForKey:@"achArrivalTimeKey"];
+        _approvedOnDate                 = [aDecoder decodeObjectForKey:@"achApprovedOnDateKey"];
+        _isSelected                     = [aDecoder decodeBoolForKey:@"isSelectedKey"];
+        _hasBeenViewed                  = [aDecoder decodeBoolForKey:@"hasBeenViewed"];
+        _isApproved                     = [aDecoder decodeBoolForKey:@"isApprovedKey"];
+        _approvalLocationLatitude       = [aDecoder decodeObjectForKey:@"approvalLocationLatitudeKey"];
+        _approvalLocationLongitude      = [aDecoder decodeObjectForKey:@"approvalLocationLongitudeKey"];
+        _contactInformation             = [aDecoder decodeObjectForKey:@"contactInformationKey"];
 	}
     
 	return self;

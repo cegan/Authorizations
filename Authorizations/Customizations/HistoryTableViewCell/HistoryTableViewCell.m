@@ -8,6 +8,9 @@
 
 #import "HistoryTableViewCell.h"
 #import "AuthorizationUIUtilities.h"
+#import "AchDetail.h"
+#import "CheckDetail.h"
+#import "WireDetail.h"
 #import "CalendarUtilities.h"
 
 @interface HistoryTableViewCell()
@@ -20,20 +23,6 @@
 
 @implementation HistoryTableViewCell
 
-#define kAmountLabelWidth                   81.0
-#define kAmountLabelHeight                  21.0
-#define kNameLabelWidth                     193.0
-#define kNameLabelHeight                    20.0
-#define kDetailLabelWidth                   203.0
-#define kDetailLabelHeight                  21.0
-#define kApproveCheckboxImageViewWidth      25.0
-#define kApproveCheckboxImageViewHeight     25.0
-#define kArrivalTimeStampWidth              50.0
-#define kArrivalTimeStampHeight             17.0
-#define kApprovalTimeStampWidth             85.0
-#define kApprovalTimeStampHeight            17.0
-#define kArrivalDayStampWidth               50.0
-#define kArrivalDayStampHeight              17.0
 
 @synthesize nameLabel                   = _nameLabel;
 @synthesize detailsLabel                = _detailsLabel;
@@ -52,9 +41,15 @@
     
     self.accessoryType             = UITableViewCellAccessoryDisclosureIndicator;
     
-    [self addSubview:[AuthorizationUIUtilities getApprovalDateTimeStampForDate:[CalendarUtilities getLongDateFormatForDate:approvalDetail.approvedOnDate]]];
+    UIImageView *dateTimeStamp      = [AuthorizationUIUtilities getApprovalDateTimeStampForDate:approvalDetail.approvedOnDate];
+    UIImageView *approvalTypeStamp  = [AuthorizationUIUtilities getApprovalTypeStampWithText:[AuthorizationUIUtilities getLabelForAuthorizationType:approvalDetail] atPosition:                             dateTimeStamp.frame.size.width];
+    
+   
+    [self addSubview:dateTimeStamp];
+    [self addSubview:approvalTypeStamp];
     
 }
+
 
 
 @end

@@ -16,6 +16,7 @@
 #import "Enums.h"
 #import "CalendarUtilities.h"
 #import "CustomColoredAccessory.h"
+#import "BlockActionSheet.h"
 
 
 @interface CheckDetailViewController ()
@@ -45,11 +46,16 @@
 }
 - (IBAction) showActionSheet:(id)sender {
     
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Approve Ach" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Approve" otherButtonTitles:nil, nil];
     
-    actionSheet.tag = 1;
-    actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-    [actionSheet showInView:self.navigationController.view];
+    BlockActionSheet *sheet = [BlockActionSheet sheetWithTitle:@"Approve Check"];
+    
+    [sheet addButtonWithTitle:@"Approve" atIndex:0 block:^{
+        
+        [self sendApprovalRequest:_detail];
+    }];
+    
+    [sheet setDestructiveButtonWithTitle:@"Cancel" block:nil];
+    [sheet showInView:self.view];
     
 }
 
@@ -80,21 +86,6 @@
     _checkDetailTableView.backgroundColor       = [UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewBackgroundBrown.png"]];
     _checkDetailTableView.separatorColor        = BROWN_TEXT_COLOR;
     _checkDetailTableView.separatorStyle        = UITableViewCellSeparatorStyleSingleLine;
-}
-
-- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
-    if(actionSheet.tag == 1){
-        
-        if (buttonIndex == 0) {
-            
-            [self sendApprovalRequest:_detail];
-        }
-        else {
-            
-            [actionSheet dismissWithClickedButtonIndex:1 animated:YES];
-        }
-    }
 }
 
 - (void) sendApprovalRequest:(ApprovalDetailBase *) detail{

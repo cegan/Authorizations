@@ -17,6 +17,6 @@
 + (void) refreshUsersAccessToken;
 + (BOOL) isUsersAccessTokenExpired;
 
-+ (NSDate *) renewTokenExpiration;
++ (NSDate *) renewAccessTokenExpirationDateTime;
 + (NSString *) getAuthorizationHeaderValue;
 @end

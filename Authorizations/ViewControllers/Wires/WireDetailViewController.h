@@ -11,7 +11,7 @@
 #import "AuthorizationBaseDetailViewController.h"
 #import "DetailLabel.h"
 
-@interface WireDetailViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate>
+@interface WireDetailViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
 
 
 @property (strong, nonatomic) ApprovalDetailBase *detail;
@@ -20,3 +20,4 @@
 @property (weak, nonatomic) IBOutlet UITableView *wireDetailsTableView;
 
 @end
+ 

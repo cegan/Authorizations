@@ -34,4 +34,8 @@
 + (NSString *) getloggedinUser;
 + (UserInformation *) getArchivedUserInformation;
 
++ (void) archiveDefaultSortingIndex:(NSNumber *) sortingIndex;
++ (NSNumber *) unArchiveDefaultSortingIndex;
+
+
 @end

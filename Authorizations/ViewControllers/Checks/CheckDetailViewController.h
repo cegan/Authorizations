@@ -11,7 +11,7 @@
 #import "NotesViewController.h"
 #import "AuthorizationBaseDetailViewController.h"
 
-@interface CheckDetailViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate> 
+@interface CheckDetailViewController : UIViewController<UITableViewDelegate,UITableViewDataSource> 
 
 
 @property (weak, nonatomic) IBOutlet UITableView *checkDetailTableView;

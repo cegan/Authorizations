@@ -90,6 +90,13 @@
 }
 
 
++ (void) deleteAllArchivedApprovals{
+    
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kAchDataKey];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kCheckDataKey];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kWireDataKey];
+}
+
 + (void) archiveApprovedItems:(NSArray *)approvedItems withKey:(NSString *)key{
     
     NSMutableArray *allItems = [[NSMutableArray alloc] init];
@@ -115,13 +122,6 @@
     [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:notification] forKey:key];
 }
 
-+ (void) deleteAllArchivedApprovals{
-    
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kAchDataKey];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kCheckDataKey];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kWireDataKey];
-}
-
 + (void) archiveUserDeviceToken:(NSString *) deviceToken{
     
     [[NSUserDefaults standardUserDefaults] setObject: deviceToken forKey:kAuthAppDeviceToken];
@@ -129,7 +129,7 @@
 
 + (void) archiveUsersApiGatewayAccessToken:(NSString *) usersApiGatewayAccessToken{
     
-    [[NSUserDefaults standardUserDefaults] setObject: [TokenUtilities renewTokenExpiration] forKey:kAccessTokenExpirationKey];
+    [[NSUserDefaults standardUserDefaults] setObject: [TokenUtilities renewAccessTokenExpirationDateTime] forKey:kAccessTokenExpirationKey];
     [[NSUserDefaults standardUserDefaults] setObject: usersApiGatewayAccessToken forKey:kUsersApiGatewayAccessTokenKey];
 }
 
@@ -142,6 +142,18 @@
     
     [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:userInformation] forKey:kUserInformationKey];
 }
+
++ (void) archiveDefaultSortingIndex:(NSNumber *) sortingIndex{
+    
+    [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:sortingIndex] forKey:@"SortingIndex"];
+}
+
+
++ (NSNumber *) unArchiveDefaultSortingIndex{
+    
+    return [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"SortingIndex"]];
+}
+
 
 + (void) logoutUser{
     

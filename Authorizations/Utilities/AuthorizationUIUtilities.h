@@ -12,12 +12,13 @@
 
 @interface AuthorizationUIUtilities : NSObject
 
-+ (UIImageView *) getBadge:(NSInteger *) withBadgeNumber;
-+ (UIImageView *) getApprovalDateTimeStampForDate:(NSString *) approvalDate;
++ (UIImageView *) getBadgeImageWithCount:(NSInteger *) count;
++ (UIImageView *) getApprovalDateTimeStampForDate:(NSDate *) approvalDate;
 + (UIImageView *) getArrivalStampForDate:(NSDate *) date;
++ (UIImageView *) getApprovalTypeStampWithText:(NSString *) text atPosition:(int) position;
++ (NSString *) getLabelForAuthorizationType:(ApprovalDetailBase *) type;
 
 
-+ (void) updateApproveButton:(UIButton *) button withTotalNumberOfSelectedItems:(int) value;
 + (void) showModalApprovalSuccessInView:(UIView *) view;
 + (void) showModalApprovalErrorInView:(UIView *) view;
 + (void) showModalNetworkError:(NSInteger *) errorType InView:(UIView *) view;

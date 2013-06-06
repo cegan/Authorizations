@@ -10,12 +10,14 @@
 
 
 @interface LoginViewController ()
-
+ 
 - (void) setLoginBtn;
 - (void) setDelegates;
 - (void) setActivityIndicator;
 - (void) registerNotifications;
 - (void) showErrorWithMessage:(NSString *) message;
+- (void) setLoginTableProperties;
+- (void) setCopywritelabel;
 
 @end
 
@@ -25,6 +27,8 @@
 @synthesize loginTable  = _loginTable;
 @synthesize userNameTF  = _userNameTF;
 @synthesize passwordTF  = _passwordTF;
+@synthesize footerLabel = _footerLabel;
+
 
 - (IBAction) onLoginTouch:(id)sender {
     
@@ -44,28 +48,53 @@
     }
 }
 
-
-
 - (void) viewDidLoad{
     
     [super viewDidLoad];
+    [self setDelegates];
     [self registerNotifications];
     [self setActivityIndicator];
     [self setLoginBtn];
-    [self setDelegates];
-    
+    [self setLoginTableProperties];
+    [self setCopywritelabel];
     
     self.view.backgroundColor = [UIColor colorWithRed:246.00/255.0 green:241.0/255.00 blue:228.0/255.00 alpha:1.0];
-	
-    [_loginTable setBackgroundView:nil];
-    [_loginTable setBackgroundView:[[UIView alloc] init]];
-    [_loginTable setBackgroundColor:UIColor.clearColor];
     
-    _loginTable.layer.borderColor     = [UIColor clearColor].CGColor;
-    _loginTable.layer.cornerRadius    = 5.0;
-    _loginTable.layer.borderWidth     = 0.5;
-   
-    _loginTable.separatorColor        = [UIColor colorWithRed:124.00/255.0 green:104.0/255.00 blue:76.0/255.00 alpha:0.5];
+}
+
+- (void) registerNotifications{
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginCompleted:) name:@"loginCompleted" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+}
+
+- (void) setDelegates{
+    
+    self.loginTable.dataSource   = self;
+    self.loginTable.delegate     = self;
+    self.userNameTF.delegate     = self;
+    self.passwordTF.delegate     = self;
+    
+    self.userNameTF.userInteractionEnabled = NO;
+    self.passwordTF.userInteractionEnabled = NO;
+}
+
+- (void) setCopywritelabel{
+    
+    self.footerLabel.textColor = RED_TEXT_COLOR_HALF_ALPHA;
+    self.footerLabel.text      = @"© Farm Credit Services of America";
+}
+
+- (void) setLoginTableProperties{
+    
+    [self.loginTable setBackgroundView:nil];
+    [self.loginTable setBackgroundView:[[UIView alloc] init]];
+    [self.loginTable setBackgroundColor:UIColor.clearColor];
+    
+    self.loginTable.layer.borderColor     = [UIColor clearColor].CGColor;
+    self.loginTable.layer.cornerRadius    = 5.0;
+    self.loginTable.layer.borderWidth     = 0.5;
+    self.loginTable.separatorColor        = [UIColor colorWithRed:124.00/255.0 green:104.0/255.00 blue:76.0/255.00 alpha:0.5];
 }
 
 - (void) setLoginBtn{
@@ -88,27 +117,24 @@
     activityIndicator.color  = [UIColor colorWithRed:147.00/255.0 green:27.0/255.00 blue:12.0/255.00 alpha:1.0];
 }
 
-- (void) registerNotifications{
+- (void) keyboardWillShow:(NSNotification *)notification{
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginCompleted:) name:@"loginCompleted" object:nil];
-}
-
-- (void) setDelegates{
-    
-    self.loginTable.delegate     = self;
-    self.loginTable.dataSource   = self;
-    
-    _userNameTF.delegate         = self;
-    _passwordTF.delegate         = self;
+    if(self.userNameTF.isEditing){
+        
+        self.userNameTF.text = @"";
+    }
+    else if(self.passwordTF.isEditing){
+        
+        self.passwordTF.text = @"";
+    }
 }
 
 - (void) showErrorWithMessage:(NSString *) message{
     
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:message delegate:self cancelButtonTitle:@"Ok" destructiveButtonTitle:nil otherButtonTitles:nil, nil];
+    BlockActionSheet *sheet = [BlockActionSheet sheetWithTitle:message];
     
-    actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-    [[actionSheet layer] setBackgroundColor:[UIColor redColor].CGColor];
-    [actionSheet showInView:self.view];
+    [sheet setDestructiveButtonWithTitle:@"Ok" block:nil];
+    [sheet showInView:self.view];
 }
 
 - (void) loginCompleted:(NSNotification *)notification{
@@ -132,12 +158,6 @@
     
     [self.userNameTF resignFirstResponder];
     [self.passwordTF resignFirstResponder];
-   
-}
-
-- (void) textFieldDidBeginEditing:(UITextField *)sender{
-    
-   _userNameTF.text = @"";
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
@@ -154,6 +174,7 @@
     return YES;
 }
 
+
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     return 44;
@@ -166,36 +187,33 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
    
-    
-    NSString *identifier = @"LoginCellIdentifier";
-    
-    UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+    UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:kLoginCellIdentifier];
     
     if (cell == nil) {
         
         cell = [[UITableViewCell alloc] init];
     }
     
+
     if(indexPath.row == 0){
         
-        self.userNameTF = [[UITextField alloc] initWithFrame:CGRectMake(5, 10, 280, 22)];
-        self.userNameTF.font = [[UIFont fontWithName:@"HelveticaNeue" size:14] init];
-        self.userNameTF.textColor = [UIColor grayColor];
+        self.userNameTF                 = [[UITextField alloc] initWithFrame:CGRectMake(15, 15, 280, 19)];
+        self.userNameTF.font            = HELVETICA_NEUE_BOLD_ITALIC;
+        self.userNameTF.textColor       = CHARCOAL_GREY_TEXT_COLOR;
         self.userNameTF.clearButtonMode = UITextFieldViewModeWhileEditing;
-        self.userNameTF.tag = 0;
-        self.userNameTF.text = @"Username";
-        [cell.contentView addSubview:self.userNameTF];
+        self.userNameTF.tag             = 0;
+        self.userNameTF.text            = @"Username";
+        [cell addSubview:self.userNameTF];
     }
     else{
         
-        self.passwordTF = [[UITextField alloc] initWithFrame:CGRectMake(5, 10, 280, 22)];
-        self.passwordTF.font = [[UIFont fontWithName:@"HelveticaNeue" size:14] init];
-        self.passwordTF.textColor = [UIColor grayColor];
+        self.passwordTF                 = [[UITextField alloc] initWithFrame:CGRectMake(15, 12, 280, 19)];
+        self.passwordTF.font            = HELVETICA_NEUE_BOLD_ITALIC;
+        self.passwordTF.textColor       = CHARCOAL_GREY_TEXT_COLOR;
         self.passwordTF.clearButtonMode = UITextFieldViewModeWhileEditing;
-        self.passwordTF.tag = 1;
-        self.passwordTF.text = @"Password";
-        [cell.contentView addSubview:self.passwordTF];
-        
+        self.passwordTF.tag             = 1;
+        self.passwordTF.text            = @"Password";
+        [cell addSubview:self.passwordTF];
     }
     
     return cell;

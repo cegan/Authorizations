@@ -144,6 +144,7 @@
 		4D74A61316BDE19000DE8A61 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D74A61216BDE19000DE8A61 /* HistoryViewController.m */; };
 		4D74A61C16BEBDE600DE8A61 /* HistoryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D74A61B16BEBDE600DE8A61 /* HistoryTableViewCell.xib */; };
 		4D74A61F16BEBE1600DE8A61 /* HistoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D74A61E16BEBE1600DE8A61 /* HistoryTableViewCell.m */; };
+		4DA3288B1842C31B00D79039 /* travis.yml in Resources */ = {isa = PBXBuildFile; fileRef = 4DA3288A1842C31B00D79039 /* travis.yml */; };
 		4DA4A9A616B5CD7200CF5FF1 /* CheckViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DA4A9A516B5CD7200CF5FF1 /* CheckViewController.m */; };
 		4DA4A9AE16B5CE4800CF5FF1 /* CheckDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DA4A9AD16B5CE4800CF5FF1 /* CheckDetailViewController.m */; };
 		4DA4A9B316B5D0EE00CF5FF1 /* WireDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DA4A9B016B5D0EE00CF5FF1 /* WireDetailViewController.m */; };
@@ -374,6 +375,7 @@
 		4D74A61B16BEBDE600DE8A61 /* HistoryTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HistoryTableViewCell.xib; path = Customizations/HistoryTableViewCell/HistoryTableViewCell.xib; sourceTree = "<group>"; };
 		4D74A61D16BEBE1600DE8A61 /* HistoryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HistoryTableViewCell.h; path = Customizations/HistoryTableViewCell/HistoryTableViewCell.h; sourceTree = "<group>"; };
 		4D74A61E16BEBE1600DE8A61 /* HistoryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HistoryTableViewCell.m; path = Customizations/HistoryTableViewCell/HistoryTableViewCell.m; sourceTree = "<group>"; };
+		4DA3288A1842C31B00D79039 /* travis.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = travis.yml; sourceTree = "<group>"; };
 		4DA4A9A416B5CD7200CF5FF1 /* CheckViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckViewController.h; path = ViewControllers/Checks/CheckViewController.h; sourceTree = "<group>"; };
 		4DA4A9A516B5CD7200CF5FF1 /* CheckViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckViewController.m; path = ViewControllers/Checks/CheckViewController.m; sourceTree = "<group>"; };
 		4DA4A9AC16B5CE4800CF5FF1 /* CheckDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckDetailViewController.h; path = ViewControllers/Checks/CheckDetailViewController.h; sourceTree = "<group>"; };
@@ -491,6 +493,7 @@
 		4D2A56A216B4E09000EFA3B5 = {
 			isa = PBXGroup;
 			children = (
+				4DA3288A1842C31B00D79039 /* travis.yml */,
 				4D2066D416B62C31002B9828 /* Default.png */,
 				4D2066D216B62C26002B9828 /* Default@2x.png */,
 				4D2066D016B62C0A002B9828 /* Default-568h@2x.png */,
@@ -1083,6 +1086,7 @@
 				4DB5E27316C9A9A100579700 /* menuLogout@2x.png in Resources */,
 				4DB5E27516C9AB3C00579700 /* menuItemLogoutLabel@2x.png in Resources */,
 				4DB5E27816C9ACE200579700 /* LoginViewController.xib in Resources */,
+				4DA3288B1842C31B00D79039 /* travis.yml in Resources */,
 				4DFF05DA16D594D400ED546D /* SettingsTitle@2x.png in Resources */,
 				4DFF05DC16D6659900ED546D /* testToolbar@2x.png in Resources */,
 				4DFF05E216D68D2000ED546D /* approveButtonActive2@2x.png in Resources */,
